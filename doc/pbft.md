@@ -1,4 +1,4 @@
-## pbft的启动及配置
+## pbft的配置与启动
 
 当节点是vp时，server方法 -> GetEngine设置engine.consenter为obcBatch，obcBatch有一个成员externalEventReceiver实现了RecvMsg
 方法。
@@ -33,8 +33,8 @@ submitToLeader存下该请求（storeOutstanding(req)），并广播（防止自己处于错误的vie
 
 
 #### 主节点发送PrePrepare过程
-1. 先得到序列号n(instance.seqNo + 1)
-2. 如果发现已经收到其他摘要相同view相同而序列号n不同的，则返回
+1. 先分配序列号n(instance.seqNo + 1)
+2. 如果发现已经发送摘要view都相同而序列号n不同的，则返回
 3. 当n不在watermarks间，或n > h + L/2 返回
 4. 当n大于viewChangeSeqNo,因为将要view-change主节点，返回
 
