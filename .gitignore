@@ -7,3 +7,4 @@ qt/build-hdu-Desktop_Qt_5_9_3_MinGW_32bit-Debug/Makefile.Release
 doc/~$$pbft节点执行过程.~vsdx
 doc/~$$pbft架构.~vsdx
 doc/pbft.md.bak
+*.user
