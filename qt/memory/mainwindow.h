@@ -5,6 +5,7 @@
 #include "memorymain.h"
 #include "memorymain.h"
 #define CARD_PATH ":/images/image/"
+#define CARD_NAME_PATH ":/raw/raw/names.txt"
 namespace Ui {
 class MainWindow;
 }

@@ -11,4 +11,7 @@
         <file>image/08.png</file>
         <file>image/09.png</file>
     </qresource>
+    <qresource prefix="/raw">
+        <file>raw/names.txt</file>
+    </qresource>
 </RCC>

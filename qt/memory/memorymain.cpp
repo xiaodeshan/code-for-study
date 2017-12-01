@@ -33,6 +33,24 @@ QStringList* MemoryMain::getAllCardNum(QString path)
     return list;
 }
 
+QStringList *MemoryMain::getAllCardName(QString path)
+{
+    QFile file(path);
+    QStringList* list = new QStringList();
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return nullptr;
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        list->append(line);
+
+        qDebug() << line;
+    }
+
+    return list;
+}
+
 int MemoryMain::getRandCardNum(int size)
 {
     return rand() % size;
@@ -69,6 +87,7 @@ void MemoryMain::init()
 {
     isShowNum = false;
     cardNums = getAllCardNum(CARD_PATH);
+    cardNames = getAllCardName(CARD_NAME_PATH);
     initRand();
 }
 
@@ -87,7 +106,8 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
         if(!isShowNum){
             isShowNum = true;
-            showImageAndLabel(currPath, currNumText);
+            QString cardName = cardNames->at(currID);
+            showImageAndLabel(currPath, currNumText + " " + cardName);
         }else{
             isShowNum = false;
             randShow();
@@ -104,7 +124,10 @@ void MemoryMain::randShow()
 
     currPath = getPathByid(randID);
     currNumText = cardNums->at(randID);
-    showImageAndLabel(currPath, currNumText);
+    currID = randID;
+
+    QString cardName = cardNames->at(randID);
+    showImageAndLabel(currPath, currNumText + " " + cardName);
 }
 
 

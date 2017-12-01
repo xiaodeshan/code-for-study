@@ -25,6 +25,8 @@ public:
     ~MemoryMain();
 
     QStringList* getAllCardNum(QString path);
+    QStringList *getAllCardName(QString path);
+
     int getRandCardNum(int size);
     void initRand();
 
@@ -33,7 +35,9 @@ public:
     void init();
     int getNumSize();
 
+    // 根据文件名来提取的id,可能存在"01"等id
     QStringList* cardNums;
+    QStringList* cardNames;
 
     bool isShowNum;
     void keyPressEvent(QKeyEvent *event);
@@ -42,6 +46,7 @@ public:
 
     QString currPath;
     QString currNumText;
+    int currID;
 
 private:
     Ui::MemoryMain *ui;
