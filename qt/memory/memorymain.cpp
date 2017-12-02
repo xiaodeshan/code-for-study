@@ -17,38 +17,30 @@ MemoryMain::~MemoryMain()
     delete ui;
 }
 
-QStringList* MemoryMain::getAllCardNum(QString path)
-{
-    QDir* dir = new QDir(path);
-    QStringList* list = new QStringList();
-    if (!dir->exists()){
-        return nullptr;
-    }
 
-    QFileInfoList fileinfoList = dir->entryInfoList();
-    for (int i = 0; i < fileinfoList.size(); ++i) {
-        QFileInfo fileInfo = fileinfoList.at(i);
-        list->append(fileInfo.baseName());
-    }
-    return list;
-}
-
-QStringList *MemoryMain::getAllCardName(QString path)
+void MemoryMain::getAllCardInfo(QString path)
 {
     QFile file(path);
-    QStringList* list = new QStringList();
+    cardNums = new QStringList();
+    cardNames = new QStringList();
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return nullptr;
+        return;
 
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
-        list->append(line);
 
-        qDebug() << line;
+        line.replace('\t', ' ');
+
+        QStringList listLine = line.split(' ');
+        QString name = listLine.at(0);
+        QString num = listLine.at(listLine.size() - 1);
+
+        qDebug() << "line " << line << " name = " << name << " num = " << num;
+        cardNums->append(num);
+        cardNames->append(name);
+        //qDebug() << line;
     }
-
-    return list;
 }
 
 int MemoryMain::getRandCardNum(int size)
@@ -69,6 +61,7 @@ QString MemoryMain::getPathByid(int id)
 
 void MemoryMain::showImageAndLabel(QString path, QString text)
 {
+    qDebug() << "path " << path << " text" << text;
     if(!path.isEmpty()){
         QImage image(path);
         ui->imageLabel->setPixmap(QPixmap::fromImage(image));
@@ -86,9 +79,10 @@ void MemoryMain::showImageAndLabel(QString path, QString text)
 void MemoryMain::init()
 {
     isShowNum = false;
-    cardNums = getAllCardNum(CARD_PATH);
-    cardNames = getAllCardName(CARD_NAME_PATH);
+    getAllCardInfo(CARD_NAME_PATH);
     initRand();
+    initMenuBar();
+    initBackground();
 }
 
 int MemoryMain::getNumSize()
@@ -110,7 +104,25 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
             showImageAndLabel(currPath, currNumText + " " + cardName);
         }else{
             isShowNum = false;
+            backStack.push(currID);
             randShow();
+            qDebug() << "id input stack" << currID;
+        }
+        break;
+    case Qt::Key_Left:
+        if(!isShowNum){
+            //回退到上一个
+            if(!backStack.isEmpty()){
+                int last = backStack.pop();
+                qDebug() << "id out stack" << last;
+                updateByID(last);
+            }else{
+                QMessageBox::information(this, "提示", "已经是第一个了",
+                                         QMessageBox::Ok);
+            }
+        }else{
+            ui->numLabel->setText("");
+            isShowNum = false;
         }
         break;
     default:
@@ -121,13 +133,39 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
 void MemoryMain::randShow()
 {
     int randID = getRandCardNum(getNumSize());
+    updateByID(randID);
+}
 
-    currPath = getPathByid(randID);
-    currNumText = cardNums->at(randID);
-    currID = randID;
+void MemoryMain::updateByID(int id)
+{
+    currPath = getPathByid(id);
+    qDebug() << "id = " << id << " path = " + currPath;
+    currNumText = cardNums->at(id);
+    currID = id;
 
-    QString cardName = cardNames->at(randID);
+    QString cardName = cardNames->at(id);
     showImageAndLabel(currPath, currNumText + " " + cardName);
+
+    qDebug() << "id = " << id << " path = " + currPath;
+}
+
+void MemoryMain::initMenuBar()
+{
+    menuBar = new QMenuBar(this);
+    //menuBar->setAttribute();
+
+    QMenu* fileMenu = menuBar->addMenu(tr("&设置"));
+    fileMenu->addAction("模式");
+}
+
+void MemoryMain::initBackground()
+{
+    QPalette pal(this->palette());
+
+    //设置背景黑色
+    pal.setColor(QPalette::Background, Qt::white);
+    this->setAutoFillBackground(true);
+    this->setPalette(pal);
 }
 
 

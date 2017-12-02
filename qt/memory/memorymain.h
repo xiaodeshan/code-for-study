@@ -12,6 +12,9 @@
 #include <QImage>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QStack>
+#include <QMessageBox>
+#include <QMenuBar>
 namespace Ui {
 class MemoryMain;
 }
@@ -24,8 +27,8 @@ public:
     explicit MemoryMain(QWidget *parent = 0);
     ~MemoryMain();
 
-    QStringList* getAllCardNum(QString path);
-    QStringList *getAllCardName(QString path);
+
+    void getAllCardInfo(QString path);
 
     int getRandCardNum(int size);
     void initRand();
@@ -47,6 +50,15 @@ public:
     QString currPath;
     QString currNumText;
     int currID;
+
+    QStack<int> backStack;
+
+    void updateByID(int id);
+
+    QMenuBar *menuBar;
+
+    void initMenuBar();
+    void initBackground();
 
 private:
     Ui::MemoryMain *ui;

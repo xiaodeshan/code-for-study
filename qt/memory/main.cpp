@@ -1,10 +1,10 @@
-#include "mainwindow.h"
+#include "memorymain.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    MemoryMain w;
     w.showMaximized();
 
     return a.exec();
