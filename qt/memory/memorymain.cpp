@@ -9,7 +9,7 @@ MemoryMain::MemoryMain(QWidget *parent) :
 
     init();
 
-    randShow();
+    startProg();
 }
 
 MemoryMain::~MemoryMain()
@@ -18,7 +18,7 @@ MemoryMain::~MemoryMain()
 }
 
 
-void MemoryMain::getAllCardInfo(QString path)
+void MemoryMain::readAllCardInfoFromFile(QString path)
 {
     QFile file(path);
     cardNums = new QStringList();
@@ -36,7 +36,7 @@ void MemoryMain::getAllCardInfo(QString path)
         QString name = listLine.at(0);
         QString num = listLine.at(listLine.size() - 1);
 
-        qDebug() << "line " << line << " name = " << name << " num = " << num;
+        //qDebug() << "line " << line << " name = " << name << " num = " << num;
         cardNums->append(num);
         cardNames->append(name);
         //qDebug() << line;
@@ -48,7 +48,7 @@ int MemoryMain::getRandCardNum(int size)
     return rand() % size;
 }
 
-void MemoryMain::initRand()
+void MemoryMain::initSrand()
 {
     srand(time(0));
 }
@@ -61,7 +61,7 @@ QString MemoryMain::getPathByid(int id)
 
 void MemoryMain::showImageAndLabel(QString path, QString text)
 {
-    qDebug() << "path " << path << " text" << text;
+    //qDebug() << "path " << path << " text" << text;
     if(!path.isEmpty()){
         QImage image(path);
         ui->imageLabel->setPixmap(QPixmap::fromImage(image));
@@ -79,10 +79,12 @@ void MemoryMain::showImageAndLabel(QString path, QString text)
 void MemoryMain::init()
 {
     isShowNum = false;
-    getAllCardInfo(CARD_NAME_PATH);
-    initRand();
+    readAllCardInfoFromFile(CARD_NAME_PATH);
+    initSrand();
     initMenuBar();
     initBackground();
+    justStart = true;
+    mode = stydyMode;
 }
 
 int MemoryMain::getNumSize()
@@ -105,8 +107,9 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
         }else{
             isShowNum = false;
             backStack.push(currID);
-            randShow();
-            qDebug() << "id input stack" << currID;
+
+            updateByID(getNextID());
+            //qDebug() << "id input stack" << currID;
         }
         break;
     case Qt::Key_Left:
@@ -114,7 +117,7 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
             //回退到上一个
             if(!backStack.isEmpty()){
                 int last = backStack.pop();
-                qDebug() << "id out stack" << last;
+                //qDebug() << "id out stack" << last;
                 updateByID(last);
             }else{
                 QMessageBox::information(this, "提示", "已经是第一个了",
@@ -130,23 +133,17 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void MemoryMain::randShow()
-{
-    int randID = getRandCardNum(getNumSize());
-    updateByID(randID);
-}
-
 void MemoryMain::updateByID(int id)
 {
     currPath = getPathByid(id);
-    qDebug() << "id = " << id << " path = " + currPath;
+    //qDebug() << "id = " << id << " path = " + currPath;
     currNumText = cardNums->at(id);
     currID = id;
 
     QString cardName = cardNames->at(id);
     showImageAndLabel(currPath, currNumText + " " + cardName);
 
-    qDebug() << "id = " << id << " path = " + currPath;
+    //qDebug() << "id = " << id << " path = " + currPath;
 }
 
 void MemoryMain::initMenuBar()
@@ -155,7 +152,24 @@ void MemoryMain::initMenuBar()
     //menuBar->setAttribute();
 
     QMenu* fileMenu = menuBar->addMenu(tr("&设置"));
-    fileMenu->addAction("模式");
+    QMenu* modeMenu = fileMenu->addMenu(tr("&模式"));
+
+    QAction *stydyModeAction = new QAction("学习模式");
+    QAction *checkModeAction = new QAction("检查模式");
+    stydyModeAction->setCheckable(true);
+    checkModeAction->setCheckable(true);
+
+    QActionGroup* modeActionGroup = new QActionGroup(this);
+    modeActionGroup->addAction(stydyModeAction);
+    modeActionGroup->addAction(checkModeAction);
+    stydyModeAction->setChecked(true);
+    modeActionGroup->setExclusive(true);
+
+    modeMenu->addActions(modeActionGroup->actions());
+    //fileMenu->addAction("模式");
+
+    connect(stydyModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseStydyMode(bool)));
+    connect(checkModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseCheckMode(bool)));
 }
 
 void MemoryMain::initBackground()
@@ -166,6 +180,37 @@ void MemoryMain::initBackground()
     pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(pal);
+}
+
+int MemoryMain::getNextID()
+{
+    if(mode == stydyMode){
+        if(justStart){
+            justStart = false;
+            return 0;
+        }else{
+            return (currID + 1) % getNumSize();
+        }
+    }else{
+        return getRandCardNum(getNumSize());
+    }
+}
+
+void MemoryMain::startProg()
+{
+    updateByID(getNextID());
+}
+
+void MemoryMain::slotChooseStydyMode(bool triggle)
+{
+    if(triggle)
+        mode = stydyMode;
+}
+
+void MemoryMain::slotChooseCheckMode(bool triggle)
+{
+    if(triggle)
+        mode = checkMode;
 }
 
 
