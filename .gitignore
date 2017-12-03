@@ -137,3 +137,4 @@ qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/image/17.png
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/image/16.png
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/image/15.png
 qt/memory/raw/names.txt.bak
+*.bak
