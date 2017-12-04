@@ -214,6 +214,7 @@ void MemoryMain::initUI()
 
     leftLayout->addWidget(imageLabel, 0, Qt::AlignCenter);
     leftLayout->addWidget(numLabel, 0, Qt::AlignCenter);
+    leftLayout->setContentsMargins(0, 0, 0, 30);
 
     //学习模式的进度条
     stateLayout = new QVBoxLayout();

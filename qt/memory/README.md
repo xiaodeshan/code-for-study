@@ -2,6 +2,6 @@
 `109` numbers picture to memory!
 
 # program show
-![rrr.png](http://oy0bv3xen.bkt.clouddn.com/f4fd65ec8f534a35917721a56b042c37.png)
+![dd.png](http://oy0bv3xen.bkt.clouddn.com/14c86906e4dc48b3a15654d6a3c4f3d0.png)
 
 
