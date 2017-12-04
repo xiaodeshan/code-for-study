@@ -31,8 +31,7 @@ SOURCES += \
 HEADERS += \
     memorymain.h
 
-FORMS += \
-    memorymain.ui
+FORMS +=
 
 RESOURCES += \
     images.qrc

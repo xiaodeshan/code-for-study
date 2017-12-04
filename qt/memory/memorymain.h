@@ -14,19 +14,19 @@
 #include <QStack>
 #include <QMessageBox>
 #include <QMenuBar>
+#include <qlabel.h>
+#include <QHBoxLayout>
+#include <QProgressBar>
 
 #define CARD_PATH "./image/"
 #define CARD_NAME_PATH ":/raw/raw/names.txt"
-namespace Ui {
-class MemoryMain;
-}
 
 class MemoryMain : public QWidget
 {
     Q_OBJECT
 
     enum Mode{
-        stydyMode,
+        studyMode,
         checkMode
     };
 
@@ -49,6 +49,15 @@ public:
     // 是否首次运行
     bool justStart;
 
+    // ui
+    QLabel* imageLabel;
+    QLabel* numLabel;
+
+    QLabel* processTextLabel;
+    QProgressBar *stateProcessBar;
+    QVBoxLayout *stateLayout;
+    QHBoxLayout *widgetLayout;
+    QWidget *rightWidget;
 
     int getRandCardNum(int size);
     QString getPathByid(int id);
@@ -59,9 +68,11 @@ public:
     void initSrand();
     void initMenuBar();
     void initBackground();
+    void initUI();
     void readAllCardInfoFromFile(QString path);
     void showImageAndLabel(QString path, QString text);
     void startProg();
+    void updateStateUI();
 
     void keyPressEvent(QKeyEvent *event);
 
@@ -69,8 +80,6 @@ public slots:
     void slotChooseStydyMode(bool triggle);
     void slotChooseCheckMode(bool triggle);
 
-private:
-    Ui::MemoryMain *ui;
 };
 
 #endif // MEMORYMAIN_H
