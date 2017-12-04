@@ -410,3 +410,15 @@ qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/imageformats/qsvg.d
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/imageformats/qjpeg.dll
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/imageformats/qico.dll
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/imageformats/qicns.dll
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/ui_learnscopedialog.h
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/qrc_images.o
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/moc_learnscopedialog.o
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/moc_learnscopedialog.cpp
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/memory_resource_res.o
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/moc_memorymain.cpp
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/learnscopedialog.o
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/moc_memorymain.o
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/memorymain.o
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/moc_predefs.h
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/main.o
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/qrc_images.cpp
