@@ -57,24 +57,26 @@ QString MemoryMain::getPathByid(int id)
 void MemoryMain::showImageAndLabel(QString path, QString text)
 {
     //qDebug() << "path " << path << " text" << text;
-    if(!path.isEmpty()){
+    if(!path.isEmpty() && isShowPic){
+        imageLabel->show();
         QImage image(path);
         imageLabel->setPixmap(QPixmap::fromImage(image));
     }
 
-    if(!text.isEmpty() && isShowNum){
+    if(!text.isEmpty()){
         numLabel->setText(text);
     }
 
-    if(!isShowNum){
-        numLabel->setText("");
+    if(!isShowPic){
+        imageLabel->hide();
+        numLabel->setFont(QFont("Times", 80, QFont::Bold));
     }
 }
 
 void MemoryMain::init()
 {
     initUI();
-    isShowNum = false;
+    isShowPic = false;
     readAllCardInfoFromFile(CARD_NAME_PATH);
     initSrand();
     initMenuBar();
@@ -106,27 +108,32 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
     case Qt::Key_Down:
     case Qt::Key_Right:
-        if(!isShowNum){
-            isShowNum = true;
+        if(!isShowPic){
+            isShowPic = true;
+            numLabel->setFont(QFont("Times", 30, QFont::Bold));
+
             QString cardName = cardNames->at(currID);
-            showImageAndLabel(currPath, currNumText + " " + cardName);
+            showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID));
         }else{
 
             if((currID == getLast() && mode == studyMode) || (fromID != -1 && backStack.size() + 1 == learnNum)){
                 QMessageBox::information(this, "提示", "恭喜，已经完成了学习",
                                          QMessageBox::Ok);
             }else{
-                isShowNum = false;
+                isShowPic = false;
+                numLabel->setFont(QFont("Times", 80, QFont::Bold));
+
                 backStack.push(currID);
 
                 updateByID(getNextID());
                 updateStateUI();
+                showImageAndLabel(currPath, currNumText);
             }
             //qDebug() << (learnNum - 1) << " " << backStack.size();
         }
         break;
     case Qt::Key_Left:
-        if(!isShowNum){
+        if(!isShowPic){
             //回退到上一个
             if(!backStack.isEmpty()){
                 int last = backStack.pop();
@@ -139,7 +146,7 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
             }
         }else{
             numLabel->setText("");
-            isShowNum = false;
+            isShowPic = false;
         }
         break;
     default:
@@ -155,7 +162,7 @@ void MemoryMain::updateByID(int id)
     currID = id;
 
     QString cardName = cardNames->at(id);
-    showImageAndLabel(currPath, currNumText + " " + cardName);
+    showImageAndLabel(currPath, currNumText);
 
     //qDebug() << "id = " << id << " path = " + currPath;
 }
@@ -210,7 +217,7 @@ void MemoryMain::initUI()
 
     imageLabel = new QLabel(this);
     numLabel = new QLabel(this);
-    numLabel->setFont(QFont("Times", 30, QFont::Bold));
+    numLabel->setFont(QFont("Times", 80, QFont::Bold));
 
     leftLayout->addWidget(imageLabel, 0, Qt::AlignCenter);
     leftLayout->addWidget(numLabel, 0, Qt::AlignCenter);

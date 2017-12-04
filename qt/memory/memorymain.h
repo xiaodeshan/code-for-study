@@ -43,7 +43,7 @@ public:
     // 根据文件名来提取的id,可能存在"01"等id
     QStringList* cardNums;
     QStringList* cardNames;
-    bool isShowNum;
+    bool isShowPic;
     QString currPath;
     QString currNumText;
     int currID;
