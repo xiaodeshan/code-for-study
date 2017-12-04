@@ -81,13 +81,23 @@ void MemoryMain::init()
     initBackground();
     justStart = true;
     mode = studyMode;
+
+    //学习范围
+    learnNum = -1;
+    fromID = -1;
 }
 
 int MemoryMain::getNumSize()
 {
-    if(cardNums == nullptr)
-        return 0;
-    return cardNums->size();
+    if(learnNum == -1)
+        return getTrueSize();
+    if(mode == checkMode)
+        return learnNum;
+    else{
+        int sizeT = getLast() - fromID + 1;
+        return learnNum > sizeT ? sizeT : learnNum;
+    }
+
 }
 
 void MemoryMain::keyPressEvent(QKeyEvent *event)
@@ -101,7 +111,8 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
             QString cardName = cardNames->at(currID);
             showImageAndLabel(currPath, currNumText + " " + cardName);
         }else{
-            if(currID == getNumSize() - 1 && mode == studyMode){
+
+            if((currID == getLast() && mode == studyMode) || (fromID != -1 && backStack.size() + 1 == learnNum)){
                 QMessageBox::information(this, "提示", "恭喜，已经完成了学习",
                                          QMessageBox::Ok);
             }else{
@@ -111,6 +122,7 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
                 updateByID(getNextID());
                 updateStateUI();
             }
+            //qDebug() << (learnNum - 1) << " " << backStack.size();
         }
         break;
     case Qt::Key_Left:
@@ -153,8 +165,12 @@ void MemoryMain::initMenuBar()
     menuBar = new QMenuBar(this);
     //menuBar->setAttribute();
 
-    QMenu* fileMenu = menuBar->addMenu(tr("&设置"));
-    QMenu* modeMenu = fileMenu->addMenu(tr("&模式"));
+    QMenu* fileMenu = menuBar->addMenu(tr("&文件"));
+    QAction* exitAction = fileMenu->addAction("退出");
+
+    QMenu* settingMenu = menuBar->addMenu(tr("&设置"));
+    QMenu* modeMenu = settingMenu->addMenu(tr("&模式"));
+    QAction* scopeMenuAction = settingMenu->addAction(tr("&学习范围"));
 
     QAction *stydyModeAction = new QAction("学习模式");
     QAction *checkModeAction = new QAction("检查模式");
@@ -168,10 +184,13 @@ void MemoryMain::initMenuBar()
     modeActionGroup->setExclusive(true);
 
     modeMenu->addActions(modeActionGroup->actions());
+
     //fileMenu->addAction("模式");
 
     connect(stydyModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseStydyMode(bool)));
     connect(checkModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseCheckMode(bool)));
+    connect(scopeMenuAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseScope()));
+    connect(exitAction, SIGNAL(triggered(bool)), this, SLOT(close()));
 }
 
 void MemoryMain::initBackground()
@@ -231,10 +250,18 @@ int MemoryMain::getNextID()
             justStart = false;
             return 0;
         }else{
-            return (currID + 1) % getNumSize();
+            if(fromID == -1)
+                return (currID + 1) % getNumSize();
+            else{
+                int last = getLast();
+
+                if(currID == last)
+                    return fromID;
+                return currID + 1;
+            }
         }
     }else{
-        return getRandCardNum(getNumSize());
+        return getRandCardNum(getTrueSize());
     }
 }
 
@@ -247,10 +274,33 @@ void MemoryMain::startProg()
 void MemoryMain::updateStateUI()
 {
     if(mode == studyMode){
-        QString processText = QString::number(currID + 1) + "/" + QString::number(getNumSize());
+        int showID = currID;
+        if(fromID != -1)
+            showID = currID - fromID;
+        QString processText = QString::number(showID + 1) + "/" + QString::number(getNumSize());
+
         processTextLabel->setText(processText);
-        stateProcessBar->setValue(100 * (currID + 1) / getNumSize());
+        stateProcessBar->setValue(100 * (showID + 1) / getNumSize());
+
     }
+}
+
+int MemoryMain::getTrueSize()
+{
+    if(cardNums == nullptr)
+        return 0;
+    return cardNums->size();
+}
+
+int MemoryMain::getLast()
+{
+    if(fromID == -1)
+        return getTrueSize() - 1;
+
+    int last = fromID + learnNum - 1;
+    if(last > getTrueSize() - 1)
+        last = getTrueSize() - 1;
+    return last;
 }
 
 void MemoryMain::slotChooseStydyMode(bool triggle)
@@ -269,6 +319,29 @@ void MemoryMain::slotChooseCheckMode(bool triggle)
     if(triggle){
         rightWidget->hide();
         mode = checkMode;
+    }
+}
+
+void MemoryMain::slotChooseScope()
+{
+    dialog = new LearnScopeDialog(this);
+    int result = dialog->exec();
+
+    if(result){
+        backStack.clear();
+
+        if(mode == studyMode){
+            learnNum = dialog->getTotal();
+            fromID = dialog->getFrom() - 1;
+
+            currID = fromID;
+            updateByID(currID);
+            updateStateUI();
+
+        }else if(mode == checkMode){
+            fromID = currID;
+            learnNum = dialog->getTotal();
+        }
     }
 }
 

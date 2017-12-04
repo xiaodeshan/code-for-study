@@ -17,14 +17,18 @@
 #include <qlabel.h>
 #include <QHBoxLayout>
 #include <QProgressBar>
+#include "learnscopedialog.h"
 
 #define CARD_PATH "./image/"
 #define CARD_NAME_PATH ":/raw/raw/names.txt"
+
+class LearnScopeDialog;
 
 class MemoryMain : public QWidget
 {
     Q_OBJECT
 
+public:
     enum Mode{
         studyMode,
         checkMode
@@ -49,6 +53,10 @@ public:
     // 是否首次运行
     bool justStart;
 
+    //学习范围
+    int learnNum;
+    int fromID;
+
     // ui
     QLabel* imageLabel;
     QLabel* numLabel;
@@ -58,6 +66,7 @@ public:
     QVBoxLayout *stateLayout;
     QHBoxLayout *widgetLayout;
     QWidget *rightWidget;
+    LearnScopeDialog* dialog;
 
     int getRandCardNum(int size);
     QString getPathByid(int id);
@@ -73,12 +82,15 @@ public:
     void showImageAndLabel(QString path, QString text);
     void startProg();
     void updateStateUI();
+    int getTrueSize();
+    int getLast();
 
     void keyPressEvent(QKeyEvent *event);
 
 public slots:
     void slotChooseStydyMode(bool triggle);
     void slotChooseCheckMode(bool triggle);
+    void slotChooseScope();
 
 };
 

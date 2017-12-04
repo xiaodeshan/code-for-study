@@ -26,12 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    memorymain.cpp
+    memorymain.cpp \
+    learnscopedialog.cpp
 
 HEADERS += \
-    memorymain.h
+    memorymain.h \
+    learnscopedialog.h
 
-FORMS +=
+FORMS += \
+    learnscopedialog.ui
 
 RESOURCES += \
     images.qrc
