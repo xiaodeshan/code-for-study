@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/raw">
-        <file>raw/names.txt</file>
-    </qresource>
-</RCC>

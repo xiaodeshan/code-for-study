@@ -44,5 +44,3 @@ HEADERS += \
 FORMS += \
     learnscopedialog.ui
 
-RESOURCES += \
-    images.qrc

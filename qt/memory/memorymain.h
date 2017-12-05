@@ -24,7 +24,7 @@
 #include "showwin.h"
 
 #define CARD_PATH "./image/"
-#define CARD_NAME_PATH ":/raw/raw/names.txt"
+#define CARD_NAME_PATH "./raw/names.txt"
 
 class LearnScopeDialog;
 
