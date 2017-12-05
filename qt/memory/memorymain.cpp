@@ -4,7 +4,6 @@ MemoryMain::MemoryMain(QWidget *parent) :
     QWidget(parent)
 {
     init();
-
     startProg();
 }
 
@@ -48,33 +47,20 @@ void MemoryMain::initSrand()
     srand(time(0));
 }
 
-QString MemoryMain::getPathByid(int id)
+QString MemoryMain::getPicPathByid(int id)
 {
     QString path = CARD_PATH + cardNums->at(id) + ".png";
     return path;
 }
 
-void MemoryMain::showImageAndLabel(QString path, QString text)
+void MemoryMain::showImageAndLabel(QString path, QString text, bool ispic)
 {
-    //qDebug() << "path " << path << " text" << text;
-    if(!path.isEmpty() && isShowPic){
-        imageLabel->show();
-        QImage image(path);
-        imageLabel->setPixmap(QPixmap::fromImage(image));
-    }
-
-    if(!text.isEmpty()){
-        numLabel->setText(text);
-    }
-
-    if(!isShowPic){
-        imageLabel->hide();
-        numLabel->setFont(QFont("Times", 80, QFont::Bold));
-    }
+    getShowWin()->showImageAndLabel(path, text, ispic);
 }
 
 void MemoryMain::init()
 {
+    widgetLayout = new QHBoxLayout();
     initUI();
     isShowPic = false;
     readAllCardInfoFromFile(CARD_NAME_PATH);
@@ -83,10 +69,7 @@ void MemoryMain::init()
     initBackground();
     justStart = true;
     mode = studyMode;
-
-    //学习范围
-    learnNum = -1;
-    fromID = -1;
+    initScope();
 }
 
 int MemoryMain::getNumSize()
@@ -110,10 +93,9 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
         if(!isShowPic){
             isShowPic = true;
-            numLabel->setFont(QFont("Times", 30, QFont::Bold));
 
             QString cardName = cardNames->at(currID);
-            showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID));
+            showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
         }else{
 
             if((currID == getLast() && mode == studyMode) || (fromID != -1 && backStack.size() + 1 == learnNum)){
@@ -121,13 +103,10 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
                                          QMessageBox::Ok);
             }else{
                 isShowPic = false;
-                numLabel->setFont(QFont("Times", 80, QFont::Bold));
-
+                showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
                 backStack.push(currID);
-
                 updateByID(getNextID());
                 updateStateUI();
-                showImageAndLabel(currPath, currNumText);
             }
             //qDebug() << (learnNum - 1) << " " << backStack.size();
         }
@@ -143,7 +122,6 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
             //回退到上一个
             if(!backStack.isEmpty()){
                 int last = backStack.pop();
-                //qDebug() << "id out stack" << last;
                 updateByID(last);
                 updateStateUI();
             }else{
@@ -151,8 +129,8 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
                                          QMessageBox::Ok);
             }
         }else{
-            numLabel->setText("");
             isShowPic = false;
+            updateByID(currID);
         }
         break;
     default:
@@ -162,21 +140,16 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
 
 void MemoryMain::updateByID(int id)
 {
-    currPath = getPathByid(id);
-    //qDebug() << "id = " << id << " path = " + currPath;
+    currPath = getPicPathByid(id);
     currNumText = cardNums->at(id);
     currID = id;
 
-    QString cardName = cardNames->at(id);
-    showImageAndLabel(currPath, currNumText);
-
-    //qDebug() << "id = " << id << " path = " + currPath;
+    showImageAndLabel(currPath, currNumText, isShowPic);
 }
 
 void MemoryMain::initMenuBar()
 {
     menuBar = new QMenuBar(this);
-    //menuBar->setAttribute();
 
     QMenu* fileMenu = menuBar->addMenu(tr("&文件"));
     QAction* exitAction = fileMenu->addAction("退出");
@@ -201,8 +174,6 @@ void MemoryMain::initMenuBar()
 
     modeMenu->addActions(modeActionGroup->actions());
 
-    //fileMenu->addAction("模式");
-
     connect(stydyModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseStydyMode(bool)));
     connect(checkModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseCheckMode(bool)));
     connect(scopeMenuAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseScope()));
@@ -213,7 +184,6 @@ void MemoryMain::initMenuBar()
 void MemoryMain::initBackground()
 {
     QPalette pal(this->palette());
-
     //设置背景黑色
     pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
@@ -222,46 +192,19 @@ void MemoryMain::initBackground()
 
 void MemoryMain::initUI()
 {
-    leftWidget = new QWidget(this);
-    QVBoxLayout *leftLayout = new QVBoxLayout();
-
-    imageLabel = new QLabel(this);
-    numLabel = new QLabel(this);
-    numLabel->setFont(QFont("Times", 80, QFont::Bold));
-
-    leftLayout->addWidget(imageLabel, 0, Qt::AlignCenter);
-    leftLayout->addWidget(numLabel, 0, Qt::AlignCenter);
-    leftLayout->setContentsMargins(0, 0, 0, 30);
-
-    leftWidget->setLayout(leftLayout);
-
+    //主界面
+    leftWidget = new ShowWin(this);
     //学习模式的进度条
-    stateLayout = new QVBoxLayout();
-    rightWidget = new QWidget(this);
+    rightWidget = new StateWin(this);
+    updateLayout();
+    setMinimumSize(QSize(1077, 913));
+}
 
-    QLabel *stateTextLabel = new QLabel("学习进度");
-    stateTextLabel->setFont(QFont("Times", 30, QFont::Bold));
-    processTextLabel = new QLabel("0/0");
-    processTextLabel->setFont(QFont("Times", 20, QFont::Bold));
-    stateProcessBar = new QProgressBar(this);
-    stateProcessBar->setMaximum(100);
-    stateProcessBar->setMinimum(0);
-    stateProcessBar->setValue(0);
-    stateProcessBar->setTextVisible(false);
-
-    stateLayout->addWidget(stateTextLabel, 0, Qt::AlignTop);
-    stateLayout->addWidget(processTextLabel, 0, Qt::AlignTop);
-    stateLayout->addWidget(stateProcessBar, 0, Qt::AlignTop);
-    stateLayout->addStretch();
-    stateLayout->setContentsMargins(20, 20, 20, 0);
-
-    rightWidget->setLayout(stateLayout);
-
-    widgetLayout = new QHBoxLayout();
-    widgetLayout->addWidget(leftWidget, 4);
-    widgetLayout->addWidget(rightWidget, 1);
-
-    this->setLayout(widgetLayout);
+void MemoryMain::initScope()
+{
+    //学习范围
+    learnNum = -1;
+    fromID = -1;
 }
 
 int MemoryMain::getNextID()
@@ -298,11 +241,7 @@ void MemoryMain::updateStateUI()
         int showID = currID;
         if(fromID != -1)
             showID = currID - fromID;
-        QString processText = QString::number(showID + 1) + "/" + QString::number(getNumSize());
-
-        processTextLabel->setText(processText);
-        stateProcessBar->setValue(100 * (showID + 1) / getNumSize());
-
+        getStateWin()->updateStateUI(showID, getNumSize());
     }
 }
 
@@ -326,21 +265,39 @@ int MemoryMain::getLast()
 
 void MemoryMain::updateLayout()
 {
-    widgetLayout->addWidget(leftWidget, 4);
-    widgetLayout->addWidget(rightWidget, 1);
+    if(leftWidget != nullptr)
+        widgetLayout->addWidget(leftWidget, 4);
+    if(rightWidget != nullptr)
+        widgetLayout->addWidget(rightWidget, 1);
 
     this->setLayout(widgetLayout);
+}
+
+StateWin *MemoryMain::getStateWin()
+{
+    return (StateWin*)(rightWidget);
+}
+
+ShowWin *MemoryMain::getShowWin()
+{
+    return (ShowWin*)(leftWidget);
 }
 
 void MemoryMain::slotChooseStydyMode(bool triggle)
 {
     if(triggle){
         mode = studyMode;
+        leftWidget->close();
+        leftWidget = new ShowWin(this);
+        leftWidget->show();
         rightWidget->show();
+        isShowPic = false;
+        showImageAndLabel(currPath, currNumText, isShowPic);
+        initScope();
 
+        updateLayout();
         updateStateUI();
     }
-
 }
 
 void MemoryMain::slotChooseCheckMode(bool triggle)
@@ -359,7 +316,6 @@ void MemoryMain::slotChooseTrainMode(bool triggle)
         leftWidget = new TrainWin(this);
         leftWidget->show();
         mode = trainMode;
-
         updateLayout();
     }
 }
@@ -375,11 +331,9 @@ void MemoryMain::slotChooseScope()
         if(mode == studyMode){
             learnNum = dialog->getTotal();
             fromID = dialog->getFrom() - 1;
-
             currID = fromID;
             updateByID(currID);
             updateStateUI();
-
         }else if(mode == checkMode){
             fromID = currID;
             learnNum = dialog->getTotal();

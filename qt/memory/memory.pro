@@ -28,12 +28,18 @@ SOURCES += \
         main.cpp \
     memorymain.cpp \
     learnscopedialog.cpp \
-    trainwin.cpp
+    trainwin.cpp \
+    timerlabel.cpp \
+    statewin.cpp \
+    showwin.cpp
 
 HEADERS += \
     memorymain.h \
     learnscopedialog.h \
-    trainwin.h
+    trainwin.h \
+    timerlabel.h \
+    statewin.h \
+    showwin.h
 
 FORMS += \
     learnscopedialog.ui

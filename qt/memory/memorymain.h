@@ -19,6 +19,9 @@
 #include <QProgressBar>
 #include "learnscopedialog.h"
 #include "trainwin.h"
+#include "timerlabel.h"
+#include "statewin.h"
+#include "showwin.h"
 
 #define CARD_PATH "./image/"
 #define CARD_NAME_PATH ":/raw/raw/names.txt"
@@ -60,19 +63,13 @@ public:
     int fromID;
 
     // ui
-    QLabel* imageLabel;
-    QLabel* numLabel;
-
-    QLabel* processTextLabel;
-    QProgressBar *stateProcessBar;
-    QVBoxLayout *stateLayout;
     QHBoxLayout *widgetLayout;
     QWidget *rightWidget;
     QWidget *leftWidget;
     LearnScopeDialog* dialog;
 
     int getRandCardNum(int size);
-    QString getPathByid(int id);
+    QString getPicPathByid(int id);
     int getNextID();
     int getNumSize();
     void updateByID(int id);
@@ -81,13 +78,16 @@ public:
     void initMenuBar();
     void initBackground();
     void initUI();
+    void initScope();
     void readAllCardInfoFromFile(QString path);
-    void showImageAndLabel(QString path, QString text);
+    void showImageAndLabel(QString path, QString text, bool ispic);
     void startProg();
     void updateStateUI();
     int getTrueSize();
     int getLast();
     void updateLayout();
+    StateWin* getStateWin();
+    ShowWin* getShowWin();
 
     void keyPressEvent(QKeyEvent *event);
 

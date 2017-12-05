@@ -425,3 +425,7 @@ qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/qrc_images.cpp
 *.o
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Release/release/moc_trainwin.cpp
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/debug/moc_trainwin.cpp
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/object_script.memory.Debug
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/debug/moc_showwin.cpp
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/object_script.memory.Release
+qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/debug/moc_timerlabel.cpp
