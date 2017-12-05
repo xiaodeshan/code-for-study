@@ -27,11 +27,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     memorymain.cpp \
-    learnscopedialog.cpp
+    learnscopedialog.cpp \
+    trainwin.cpp
 
 HEADERS += \
     memorymain.h \
-    learnscopedialog.h
+    learnscopedialog.h \
+    trainwin.h
 
 FORMS += \
     learnscopedialog.ui

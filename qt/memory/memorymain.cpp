@@ -131,8 +131,14 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
             }
             //qDebug() << (learnNum - 1) << " " << backStack.size();
         }
+
+        if(mode == trainMode){
+            TrainWin* temp = ((TrainWin*)(leftWidget));
+            temp->nextShow();
+        }
         break;
     case Qt::Key_Left:
+    case Qt::Key_Up:
         if(!isShowPic){
             //回退到上一个
             if(!backStack.isEmpty()){
@@ -181,12 +187,15 @@ void MemoryMain::initMenuBar()
 
     QAction *stydyModeAction = new QAction("学习模式");
     QAction *checkModeAction = new QAction("检查模式");
+    QAction *trainModeAction = new QAction("检查模式");
     stydyModeAction->setCheckable(true);
     checkModeAction->setCheckable(true);
+    trainModeAction->setCheckable(true);
 
     QActionGroup* modeActionGroup = new QActionGroup(this);
     modeActionGroup->addAction(stydyModeAction);
     modeActionGroup->addAction(checkModeAction);
+    modeActionGroup->addAction(trainModeAction);
     stydyModeAction->setChecked(true);
     modeActionGroup->setExclusive(true);
 
@@ -197,6 +206,7 @@ void MemoryMain::initMenuBar()
     connect(stydyModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseStydyMode(bool)));
     connect(checkModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseCheckMode(bool)));
     connect(scopeMenuAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseScope()));
+    connect(trainModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseTrainMode(bool)));
     connect(exitAction, SIGNAL(triggered(bool)), this, SLOT(close()));
 }
 
@@ -212,7 +222,7 @@ void MemoryMain::initBackground()
 
 void MemoryMain::initUI()
 {
-    widgetLayout = new QHBoxLayout();
+    leftWidget = new QWidget(this);
     QVBoxLayout *leftLayout = new QVBoxLayout();
 
     imageLabel = new QLabel(this);
@@ -222,6 +232,8 @@ void MemoryMain::initUI()
     leftLayout->addWidget(imageLabel, 0, Qt::AlignCenter);
     leftLayout->addWidget(numLabel, 0, Qt::AlignCenter);
     leftLayout->setContentsMargins(0, 0, 0, 30);
+
+    leftWidget->setLayout(leftLayout);
 
     //学习模式的进度条
     stateLayout = new QVBoxLayout();
@@ -245,7 +257,8 @@ void MemoryMain::initUI()
 
     rightWidget->setLayout(stateLayout);
 
-    widgetLayout->addLayout(leftLayout, 4);
+    widgetLayout = new QHBoxLayout();
+    widgetLayout->addWidget(leftWidget, 4);
     widgetLayout->addWidget(rightWidget, 1);
 
     this->setLayout(widgetLayout);
@@ -311,6 +324,14 @@ int MemoryMain::getLast()
     return last;
 }
 
+void MemoryMain::updateLayout()
+{
+    widgetLayout->addWidget(leftWidget, 4);
+    widgetLayout->addWidget(rightWidget, 1);
+
+    this->setLayout(widgetLayout);
+}
+
 void MemoryMain::slotChooseStydyMode(bool triggle)
 {
     if(triggle){
@@ -327,6 +348,19 @@ void MemoryMain::slotChooseCheckMode(bool triggle)
     if(triggle){
         rightWidget->hide();
         mode = checkMode;
+    }
+}
+
+void MemoryMain::slotChooseTrainMode(bool triggle)
+{
+    if(triggle){
+        rightWidget->hide();
+        leftWidget->close();
+        leftWidget = new TrainWin(this);
+        leftWidget->show();
+        mode = trainMode;
+
+        updateLayout();
     }
 }
 

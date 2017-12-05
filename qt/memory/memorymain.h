@@ -18,6 +18,7 @@
 #include <QHBoxLayout>
 #include <QProgressBar>
 #include "learnscopedialog.h"
+#include "trainwin.h"
 
 #define CARD_PATH "./image/"
 #define CARD_NAME_PATH ":/raw/raw/names.txt"
@@ -31,7 +32,8 @@ class MemoryMain : public QWidget
 public:
     enum Mode{
         studyMode,
-        checkMode
+        checkMode,
+        trainMode
     };
 
 public:
@@ -66,6 +68,7 @@ public:
     QVBoxLayout *stateLayout;
     QHBoxLayout *widgetLayout;
     QWidget *rightWidget;
+    QWidget *leftWidget;
     LearnScopeDialog* dialog;
 
     int getRandCardNum(int size);
@@ -84,12 +87,14 @@ public:
     void updateStateUI();
     int getTrueSize();
     int getLast();
+    void updateLayout();
 
     void keyPressEvent(QKeyEvent *event);
 
 public slots:
     void slotChooseStydyMode(bool triggle);
     void slotChooseCheckMode(bool triggle);
+    void slotChooseTrainMode(bool triggle);
     void slotChooseScope();
 
 };
