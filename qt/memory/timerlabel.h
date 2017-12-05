@@ -15,6 +15,8 @@ public:
 
     void start();
     void stop();
+    void reset();
+
     QString getSecText();
     QTimer* timer;
 

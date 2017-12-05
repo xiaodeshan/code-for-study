@@ -91,51 +91,67 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
     case Qt::Key_Down:
     case Qt::Key_Right:
-        if(!isShowPic){
-            isShowPic = true;
-
-            QString cardName = cardNames->at(currID);
-            showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
-        }else{
-
-            if((currID == getLast() && mode == studyMode) || (fromID != -1 && backStack.size() + 1 == learnNum)){
-                QMessageBox::information(this, "提示", "恭喜，已经完成了学习",
-                                         QMessageBox::Ok);
-            }else{
-                isShowPic = false;
+        switch (mode) {
+        case studyMode:
+        case checkMode:
+            if(!isShowPic){
+                isShowPic = true;
                 showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
-                backStack.push(currID);
-                updateByID(getNextID());
-                updateStateUI();
-            }
-            //qDebug() << (learnNum - 1) << " " << backStack.size();
-        }
+            }else{
+                if((currID == getLast() && mode == studyMode) || (fromID != -1 && backStack.size() + 1 == learnNum)){
+                    getStateWin()->stopTimerWin();
+                    QString msg = "Congratulations, You've finished the study,";
+                    msg += "cost " + QString::number(getStateWin()->getTimerWinSec()) + " seconds";
 
-        if(mode == trainMode){
-            TrainWin* temp = ((TrainWin*)(leftWidget));
-            temp->nextShow();
+                    QMessageBox::information(this, "info", msg,
+                                             QMessageBox::Ok);
+
+                }else{
+                    isShowPic = false;
+                    showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
+                    backStack.push(currID);
+                    updateByID(getNextID());
+                    updateStateUI();
+                }
+            }
+            break;
+        case trainMode:
+            getTrainWin()->nextShow();
+            break;
         }
         break;
     case Qt::Key_Left:
     case Qt::Key_Up:
-        if(!isShowPic){
-            //回退到上一个
-            if(!backStack.isEmpty()){
-                int last = backStack.pop();
-                updateByID(last);
-                updateStateUI();
+        switch (mode) {
+        case studyMode:
+        case checkMode:
+            if(!isShowPic){
+                //回退到上一个
+                if(!backStack.isEmpty()){
+                    int last = backStack.pop();
+                    updateByID(last);
+                    updateStateUI();
+                }else{
+                    QMessageBox::information(this, "提示", "已经是第一个了",
+                                             QMessageBox::Ok);
+                }
             }else{
+                isShowPic = false;
+                updateByID(currID);
+            }
+        case trainMode:
+            bool ok = getTrainWin()->lastShow();
+            if(!ok){
                 QMessageBox::information(this, "提示", "已经是第一个了",
                                          QMessageBox::Ok);
             }
-        }else{
-            isShowPic = false;
-            updateByID(currID);
+            break;
         }
         break;
     default:
         break;
     }
+
 }
 
 void MemoryMain::updateByID(int id)
@@ -283,6 +299,11 @@ ShowWin *MemoryMain::getShowWin()
     return (ShowWin*)(leftWidget);
 }
 
+TrainWin *MemoryMain::getTrainWin()
+{
+    return (TrainWin*)(leftWidget);
+}
+
 void MemoryMain::slotChooseStydyMode(bool triggle)
 {
     if(triggle){
@@ -311,7 +332,8 @@ void MemoryMain::slotChooseCheckMode(bool triggle)
 void MemoryMain::slotChooseTrainMode(bool triggle)
 {
     if(triggle){
-        rightWidget->hide();
+        //rightWidget->hide();
+        getStateWin()->resetTimerWin();
         leftWidget->close();
         leftWidget = new TrainWin(this);
         leftWidget->show();

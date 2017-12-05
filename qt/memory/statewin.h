@@ -16,6 +16,12 @@ public:
     QLabel* processTextLabel;
     QProgressBar *stateProcessBar;
     void updateStateUI(int showID, int numSize);
+    void resetTimerWin();
+
+    TimerLabel *timeLabel;
+
+    int getTimerWinSec();
+    void stopTimerWin();
 };
 
 #endif // STATEWIN_H

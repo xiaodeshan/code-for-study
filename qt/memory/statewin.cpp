@@ -14,7 +14,7 @@ void StateWin::initUI()
     processTextLabel = new QLabel("0/0");
     processTextLabel->setFont(QFont("Times", 20, QFont::Bold));
     stateProcessBar = new QProgressBar(this);
-    TimerLabel *timeLabel = new TimerLabel(this);
+    timeLabel = new TimerLabel(this);
     timeLabel->start();
 
     stateProcessBar->setMaximum(100);
@@ -38,4 +38,19 @@ void StateWin::updateStateUI(int showID, int numSize)
 
     processTextLabel->setText(processText);
     stateProcessBar->setValue(100 * (showID + 1) / numSize);
+}
+
+void StateWin::resetTimerWin()
+{
+    timeLabel->reset();
+}
+
+int StateWin::getTimerWinSec()
+{
+    return timeLabel->sec;
+}
+
+void StateWin::stopTimerWin()
+{
+    timeLabel->stop();
 }

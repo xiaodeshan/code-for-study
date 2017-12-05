@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <string>
 #include <QVBoxLayout>
+#include <QStack>
 class TrainWin : public QWidget
 {
     Q_OBJECT
@@ -17,6 +18,11 @@ public:
     void initUI();
     QString randomPhone();
     void nextShow();
+    bool lastShow();
+
+    QString currPhone;
+    QStack<QString> backStack;
+
 
 signals:
 

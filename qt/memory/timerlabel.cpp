@@ -19,6 +19,11 @@ void TimerLabel::stop()
     timer->stop();
 }
 
+void TimerLabel::reset()
+{
+    sec = 0;
+}
+
 QString TimerLabel::getSecText()
 {
     QString result = "";

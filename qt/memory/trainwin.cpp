@@ -7,6 +7,7 @@ TrainWin::TrainWin(QWidget *parent) : QWidget(parent)
 
 void TrainWin::init()
 {
+    currPhone = "";
     srand(time(0));
     initUI();
 }
@@ -14,7 +15,8 @@ void TrainWin::init()
 void TrainWin::initUI()
 {
     phoneLabel = new QLabel(this);
-    phoneLabel->setText(randomPhone());
+    currPhone = randomPhone();
+    phoneLabel->setText(currPhone);
 
     QVBoxLayout *leftLayout = new QVBoxLayout();
     phoneLabel->setFont(QFont("Times", 80, QFont::Bold));
@@ -37,5 +39,19 @@ QString TrainWin::randomPhone()
 
 void TrainWin::nextShow()
 {
-    phoneLabel->setText(randomPhone());
+    backStack.push(currPhone);
+
+    currPhone = randomPhone();
+    phoneLabel->setText(currPhone);
+}
+
+bool TrainWin::lastShow()
+{
+    if(backStack.isEmpty()){
+        return false;
+    }
+    currPhone = backStack.pop();
+    phoneLabel->setText(currPhone);
+
+    return true;
 }

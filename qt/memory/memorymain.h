@@ -88,6 +88,7 @@ public:
     void updateLayout();
     StateWin* getStateWin();
     ShowWin* getShowWin();
+    TrainWin *getTrainWin();
 
     void keyPressEvent(QKeyEvent *event);
 
