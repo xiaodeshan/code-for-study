@@ -9,7 +9,7 @@ void StateWin::initUI()
 {
     stateLayout = new QVBoxLayout(this);
 
-    QLabel *stateTextLabel = new QLabel("学习进度");
+    QLabel *stateTextLabel = new QLabel("study progress");
     stateTextLabel->setFont(QFont("Times", 30, QFont::Bold));
     processTextLabel = new QLabel("0/0");
     processTextLabel->setFont(QFont("Times", 20, QFont::Bold));

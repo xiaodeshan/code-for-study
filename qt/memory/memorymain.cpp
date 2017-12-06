@@ -175,16 +175,16 @@ void MemoryMain::initMenuBar()
 {
     menuBar = new QMenuBar(this);
 
-    QMenu* fileMenu = menuBar->addMenu(tr("&文件"));
-    QAction* exitAction = fileMenu->addAction("退出");
+    QMenu* fileMenu = menuBar->addMenu(tr("&File"));
+    QAction* exitAction = fileMenu->addAction("exit");
 
-    QMenu* settingMenu = menuBar->addMenu(tr("&设置"));
-    QMenu* modeMenu = settingMenu->addMenu(tr("&模式"));
-    QAction* scopeMenuAction = settingMenu->addAction(tr("&学习范围"));
+    QMenu* settingMenu = menuBar->addMenu(tr("&setting"));
+    QMenu* modeMenu = settingMenu->addMenu(tr("&mode"));
+    QAction* scopeMenuAction = settingMenu->addAction(tr("&study scope"));
 
-    QAction *stydyModeAction = new QAction("学习模式");
-    QAction *checkModeAction = new QAction("检查模式");
-    QAction *trainModeAction = new QAction("训练模式");
+    QAction *stydyModeAction = new QAction("stydy mode");
+    QAction *checkModeAction = new QAction("check mode");
+    QAction *trainModeAction = new QAction("train mode");
     stydyModeAction->setCheckable(true);
     checkModeAction->setCheckable(true);
     trainModeAction->setCheckable(true);

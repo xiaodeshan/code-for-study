@@ -24,7 +24,7 @@ void LearnScopeDialog::initUI()
     setWindowFlags(flags);
 
     setFixedSize(size());
-    this->setWindowTitle("学习内容设置");
+    this->setWindowTitle("study scope setting");
 
     if(parentWin->mode == parentWin->studyMode){
         ui->lineEdit->setEnabled(false);
