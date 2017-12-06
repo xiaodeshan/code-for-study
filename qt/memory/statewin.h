@@ -22,6 +22,7 @@ public:
 
     int getTimerWinSec();
     void stopTimerWin();
+    void startTimeWin();
 };
 
 #endif // STATEWIN_H

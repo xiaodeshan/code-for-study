@@ -28,6 +28,7 @@ public:
     QString getFromText();
     int getStartID();
     int getTotal();
+    int getToID();
 
     int startID;
     int endID;

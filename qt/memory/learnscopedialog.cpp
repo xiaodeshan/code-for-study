@@ -6,11 +6,9 @@ LearnScopeDialog::LearnScopeDialog(QWidget *parent) :
     ui(new Ui::LearnScopeDialog)
 {
     ui->setupUi(this);
-
-    initUI();
-
     parentWin = (MemoryMain*)(this->parent());
 
+    initUI();
     initData();
 }
 
@@ -21,28 +19,40 @@ LearnScopeDialog::~LearnScopeDialog()
 
 void LearnScopeDialog::initUI()
 {
-    Qt::WindowFlags flags=Qt::Dialog;
-    flags |=Qt::WindowCloseButtonHint;
+    Qt::WindowFlags flags = Qt::Dialog;
+    flags |= Qt::WindowCloseButtonHint;
     setWindowFlags(flags);
 
     setFixedSize(size());
     this->setWindowTitle("学习内容设置");
 
-    ui->lineEdit->setEnabled(false);
+    if(parentWin->mode == parentWin->studyMode){
+        ui->lineEdit->setEnabled(false);
+    }
+    else{
+        ui->lineEdit->setEnabled(true);
+    }
     ui->numberEdit->setEnabled(false);
     ui->totalEdit->setEnabled(false);
 
-    ui->fromEdit->setFocus();
-    ui->fromEdit->selectedText();
+    if(parentWin->mode == parentWin->studyMode){
+        ui->fromEdit->setFocus();
+        ui->fromEdit->selectedText();
+    }else if(parentWin->mode == parentWin->checkMode){
+        ui->endEdit->setFocus();
+    }
+
 }
 
 void LearnScopeDialog::initData()
 {
     if(parentWin->mode == parentWin->studyMode){
         ui->fromEdit->setText(parentWin->currNumText);
-    }else{
-        ui->fromEdit->setEnabled(false);
     }
+    else{
+        ui->fromEdit->setText("00");
+    }
+
 
     ui->lineEdit->setText(QString::number(DEFOULT_NUM));
     ui->totalEdit->setText(QString::number(parentWin->getTrueSize()));
@@ -61,6 +71,11 @@ int LearnScopeDialog::getStartID()
 int LearnScopeDialog::getTotal()
 {
     return ui->lineEdit->text().toInt();
+}
+
+int LearnScopeDialog::getToID()
+{
+    return endID;
 }
 
 void LearnScopeDialog::on_cancelbtn_clicked()
@@ -85,17 +100,19 @@ void LearnScopeDialog::on_fromEdit_textChanged(const QString &data)
     int pos = parentWin->getNumByText(data);
     startID = pos;
     if(pos != -1){
-        if(startID > endID){
-            ui->lineEdit->setText("");
-        }else{
-            ui->lineEdit->setText(QString::number(endID - startID + 1));
+        if(parentWin->mode == parentWin->studyMode){
+            if(startID > endID){
+                ui->lineEdit->setText("");
+            }else{
+                ui->lineEdit->setText(QString::number(endID - startID + 1));
+            }
         }
         ui->numberEdit->setText(QString::number(pos));
     }else{
-        ui->numberEdit->setText("");
+        if(parentWin->mode == parentWin->studyMode){
+            ui->numberEdit->setText("");
+        }
     }
-
-
 }
 
 void LearnScopeDialog::on_endEdit_textChanged(const QString &data)
@@ -103,14 +120,16 @@ void LearnScopeDialog::on_endEdit_textChanged(const QString &data)
     int pos = parentWin->getNumByText(data);
     endID = pos;
     if(pos != -1){
-        if(startID > endID){
-            ui->lineEdit->setText("");
-        }else{
-            ui->lineEdit->setText(QString::number(endID - startID + 1));
+        if(parentWin->mode == parentWin->studyMode){
+            if(startID > endID){
+                ui->lineEdit->setText("");
+            }else{
+                ui->lineEdit->setText(QString::number(endID - startID + 1));
+            }
         }
     }else{
-        ui->lineEdit->setText("");
+        if(parentWin->mode == parentWin->studyMode){
+            ui->lineEdit->setText("");
+        }
     }
-
-
 }

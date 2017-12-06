@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QTimer>
+#include <QDebug>
 
 class TimerLabel : public QLabel
 {

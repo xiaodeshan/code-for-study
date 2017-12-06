@@ -61,6 +61,7 @@ public:
     //学习范围
     int learnNum;
     int fromID;
+    int toID;
 
     // ui
     QHBoxLayout *widgetLayout;
@@ -90,6 +91,8 @@ public:
     ShowWin* getShowWin();
     TrainWin *getTrainWin();
     int getNumByText(QString data);
+    void resetLearn();
+    int getRandomByFromTo(int from, int to);
 
     void keyPressEvent(QKeyEvent *event);
 

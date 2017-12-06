@@ -54,3 +54,8 @@ void StateWin::stopTimerWin()
 {
     timeLabel->stop();
 }
+
+void StateWin::startTimeWin()
+{
+    timeLabel->start();
+}

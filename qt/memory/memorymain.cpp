@@ -98,13 +98,20 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
                 isShowPic = true;
                 showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
             }else{
-                if((currID == getLast() && mode == studyMode) || (fromID != -1 && backStack.size() + 1 == learnNum)){
-                    getStateWin()->stopTimerWin();
-                    QString msg = "Congratulations, You've finished the study,";
-                    msg += "cost " + QString::number(getStateWin()->getTimerWinSec()) + " seconds";
 
-                    QMessageBox::information(this, "info", msg,
-                                             QMessageBox::Ok);
+                if((currID == getLast() && mode == studyMode) || (fromID != -1 && backStack.size() + 1 == learnNum)){
+                    qDebug() << "rr";
+                    getStateWin()->stopTimerWin();
+                    QString msg = "Congratulations, You've finished the study.\nDid you want to continue study?";
+                    //msg += "cost " + QString::number(getStateWin()->getTimerWinSec()) + " seconds";
+
+                    int choose = QMessageBox::information(this, "Info", msg,
+                                                          QMessageBox::Ok, QMessageBox::Cancel);
+
+                    if(choose == QMessageBox::Ok){
+                        getStateWin()->startTimeWin();
+                        resetLearn();
+                    }
 
                 }else{
                     isShowPic = false;
@@ -139,6 +146,7 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
                 isShowPic = false;
                 updateByID(currID);
             }
+            break;
         case trainMode:
             bool ok = getTrainWin()->lastShow();
             if(!ok){
@@ -176,7 +184,7 @@ void MemoryMain::initMenuBar()
 
     QAction *stydyModeAction = new QAction("学习模式");
     QAction *checkModeAction = new QAction("检查模式");
-    QAction *trainModeAction = new QAction("检查模式");
+    QAction *trainModeAction = new QAction("训练模式");
     stydyModeAction->setCheckable(true);
     checkModeAction->setCheckable(true);
     trainModeAction->setCheckable(true);
@@ -214,6 +222,8 @@ void MemoryMain::initUI()
     rightWidget = new StateWin(this);
     updateLayout();
     setMinimumSize(QSize(1077, 913));
+
+    this->resize(QSize(1077, 913));
 }
 
 void MemoryMain::initScope()
@@ -240,9 +250,13 @@ int MemoryMain::getNextID()
                 return currID + 1;
             }
         }
-    }else{
-        return getRandCardNum(getTrueSize());
+    }else if(mode == checkMode){
+        if(fromID != -1)
+            return getRandomByFromTo(fromID, toID);
+        else
+            return getRandCardNum(getTrueSize());
     }
+    return -1;
 }
 
 void MemoryMain::startProg()
@@ -313,6 +327,27 @@ int MemoryMain::getNumByText(QString data)
     return -1;
 }
 
+void MemoryMain::resetLearn()
+{
+    backStack.clear();
+    isShowPic = false;
+    if(fromID != -1){
+        learnNum = dialog->getTotal();
+        currID = fromID;
+    }else{
+        currID = 0;
+    }
+    updateByID(currID);
+    updateStateUI();
+    getStateWin()->resetTimerWin();
+
+}
+
+int MemoryMain::getRandomByFromTo(int from, int to)
+{
+    return rand() % (to - from) + from + 1;
+}
+
 void MemoryMain::slotChooseStydyMode(bool triggle)
 {
     if(triggle){
@@ -333,8 +368,18 @@ void MemoryMain::slotChooseStydyMode(bool triggle)
 void MemoryMain::slotChooseCheckMode(bool triggle)
 {
     if(triggle){
-        rightWidget->hide();
         mode = checkMode;
+        leftWidget->close();
+        leftWidget = new ShowWin(this);
+        leftWidget->show();
+        isShowPic = false;
+        initScope();
+
+        currID = getNextID();
+        updateByID(currID);
+
+        updateLayout();
+        updateStateUI();
     }
 }
 
@@ -367,8 +412,16 @@ void MemoryMain::slotChooseScope()
             updateStateUI();
             getStateWin()->resetTimerWin();
         }else if(mode == checkMode){
-            fromID = currID;
+            currID = getNextID();
             learnNum = dialog->getTotal();
+            fromID = dialog->getStartID();
+            toID = dialog->getToID();
+
+            backStack.clear();
+
+            updateByID(currID);
+            updateStateUI();
+            getStateWin()->resetTimerWin();
         }
     }
 }
