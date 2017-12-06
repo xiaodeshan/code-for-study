@@ -2,6 +2,7 @@
 #define LEARNSCOPEDIALOG_H
 
 #include <QDialog>
+#include <QMessageBox>
 #include "memorymain.h"
 
 #define DEFOULT_NUM 20
@@ -24,13 +25,21 @@ public:
     void initUI();
     void initData();
 
-    int getFrom();
+    QString getFromText();
+    int getStartID();
     int getTotal();
+
+    int startID;
+    int endID;
 
 private slots:
     void on_cancelbtn_clicked();
 
     void on_obtun_clicked();
+
+    void on_fromEdit_textChanged(const QString &arg1);
+
+    void on_endEdit_textChanged(const QString &arg1);
 
 private:
     Ui::LearnScopeDialog *ui;

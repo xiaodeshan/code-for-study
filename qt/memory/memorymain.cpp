@@ -304,6 +304,15 @@ TrainWin *MemoryMain::getTrainWin()
     return (TrainWin*)(leftWidget);
 }
 
+int MemoryMain::getNumByText(QString data)
+{
+    for (int i = 0; i < cardNums->size(); ++i){
+        if(cardNums->at(i) == data)
+            return i;
+    }
+    return -1;
+}
+
 void MemoryMain::slotChooseStydyMode(bool triggle)
 {
     if(triggle){
@@ -352,10 +361,11 @@ void MemoryMain::slotChooseScope()
 
         if(mode == studyMode){
             learnNum = dialog->getTotal();
-            fromID = dialog->getFrom() - 1;
+            fromID = dialog->getStartID();
             currID = fromID;
             updateByID(currID);
             updateStateUI();
+            getStateWin()->resetTimerWin();
         }else if(mode == checkMode){
             fromID = currID;
             learnNum = dialog->getTotal();

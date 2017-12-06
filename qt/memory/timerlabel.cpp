@@ -21,6 +21,7 @@ void TimerLabel::stop()
 
 void TimerLabel::reset()
 {
+    setText("00:00");
     sec = 0;
 }
 

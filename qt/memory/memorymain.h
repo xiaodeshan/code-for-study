@@ -89,6 +89,7 @@ public:
     StateWin* getStateWin();
     ShowWin* getShowWin();
     TrainWin *getTrainWin();
+    int getNumByText(QString data);
 
     void keyPressEvent(QKeyEvent *event);
 
