@@ -7,6 +7,8 @@
 QT       += core gui
 RC_ICONS += app.ico
 
+QMAKE_LFLAGS=-static
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = memory
@@ -39,7 +41,8 @@ HEADERS += \
     trainwin.h \
     timerlabel.h \
     statewin.h \
-    showwin.h
+    showwin.h \
+    global.h
 
 FORMS += \
     learnscopedialog.ui

@@ -35,6 +35,10 @@ void MemoryMain::readAllCardInfoFromFile(QString path)
         cardNames->append(name);
         //qDebug() << line;
     }
+
+    //TODO from file
+    unfamiliarList = new QList<int>();
+    unfamiliarId = -1;
 }
 
 int MemoryMain::getRandCardNum(int size)
@@ -76,13 +80,26 @@ int MemoryMain::getNumSize()
 {
     if(learnNum == -1)
         return getTrueSize();
-    if(mode == checkMode)
-        return learnNum;
-    else{
+
+    switch (mode) {
+    case studyMode:{
         int sizeT = getLast() - fromID + 1;
         return learnNum > sizeT ? sizeT : learnNum;
+        break;
+    }
+    case checkMode:
+        return learnNum;
+        break;
+    case trainMode:
+        break;
+    case unfamiliarMode:
+        return unfamiliarList->size();
+        break;
+    default:
+        assert(0);
     }
 
+    return -1;
 }
 
 void MemoryMain::keyPressEvent(QKeyEvent *event)
@@ -91,76 +108,18 @@ void MemoryMain::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
     case Qt::Key_Down:
     case Qt::Key_Right:
-        switch (mode) {
-        case studyMode:
-        case checkMode:
-            if(!isShowPic){
-                isShowPic = true;
-                showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
-            }else{
-
-                if((currID == getLast() && mode == studyMode) || (fromID != -1 && backStack.size() + 1 == learnNum)){
-                    qDebug() << "rr";
-                    getStateWin()->stopTimerWin();
-                    QString msg = "Congratulations, You've finished the study.\nDid you want to continue study?";
-                    //msg += "cost " + QString::number(getStateWin()->getTimerWinSec()) + " seconds";
-
-                    int choose = QMessageBox::information(this, "Info", msg,
-                                                          QMessageBox::Ok, QMessageBox::Cancel);
-
-                    if(choose == QMessageBox::Ok){
-                        getStateWin()->startTimeWin();
-                        resetLearn();
-                    }
-
-                }else{
-                    isShowPic = false;
-                    showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
-                    backStack.push(currID);
-                    updateByID(getNextID());
-                    updateStateUI();
-                }
-            }
-            break;
-        case trainMode:
-            getTrainWin()->nextShow();
-            break;
-        }
+        handleKeyNext();
         break;
     case Qt::Key_Left:
     case Qt::Key_Up:
-        switch (mode) {
-        case studyMode:
-        case checkMode:
-            if(!isShowPic){
-                //回退到上一个
-                if(!backStack.isEmpty()){
-                    int last = backStack.pop();
-                    updateByID(last);
-                    updateStateUI();
-                }else{
-                    QMessageBox::information(this, "提示", "已经是第一个了",
-                                             QMessageBox::Ok);
-                }
-            }else{
-                isShowPic = false;
-                updateByID(currID);
-            }
-            break;
-        case trainMode:
-            bool ok = getTrainWin()->lastShow();
-            if(!ok){
-                QMessageBox::information(this, "提示", "已经是第一个了",
-                                         QMessageBox::Ok);
-            }
-            break;
-        }
+        handleKeyLast();
         break;
     default:
         break;
     }
 
 }
+
 
 void MemoryMain::updateByID(int id)
 {
@@ -171,41 +130,6 @@ void MemoryMain::updateByID(int id)
     showImageAndLabel(currPath, currNumText, isShowPic);
 }
 
-void MemoryMain::initMenuBar()
-{
-    menuBar = new QMenuBar(this);
-
-    menuBar->setFixedSize(QSize(this->width(), menuBar->height()));
-
-    QMenu* fileMenu = menuBar->addMenu(tr("&File"));
-    QAction* exitAction = fileMenu->addAction("Exit");
-
-    QMenu* settingMenu = menuBar->addMenu(tr("&Setting"));
-    QMenu* modeMenu = settingMenu->addMenu(tr("&mode"));
-    QAction* scopeMenuAction = settingMenu->addAction(tr("&study scope"));
-
-    QAction *stydyModeAction = new QAction("&stydy mode");
-    QAction *checkModeAction = new QAction("&check mode");
-    QAction *trainModeAction = new QAction("&train mode");
-    stydyModeAction->setCheckable(true);
-    checkModeAction->setCheckable(true);
-    trainModeAction->setCheckable(true);
-
-    QActionGroup* modeActionGroup = new QActionGroup(this);
-    modeActionGroup->addAction(stydyModeAction);
-    modeActionGroup->addAction(checkModeAction);
-    modeActionGroup->addAction(trainModeAction);
-    stydyModeAction->setChecked(true);
-    modeActionGroup->setExclusive(true);
-
-    modeMenu->addActions(modeActionGroup->actions());
-
-    connect(stydyModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseStydyMode(bool)));
-    connect(checkModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseCheckMode(bool)));
-    connect(scopeMenuAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseScope()));
-    connect(trainModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseTrainMode(bool)));
-    connect(exitAction, SIGNAL(triggered(bool)), this, SLOT(close()));
-}
 
 void MemoryMain::initBackground()
 {
@@ -237,7 +161,8 @@ void MemoryMain::initScope()
 
 int MemoryMain::getNextID()
 {
-    if(mode == studyMode){
+    switch (mode) {
+    case studyMode:{
         if(justStart){
             justStart = false;
             return 0;
@@ -252,11 +177,30 @@ int MemoryMain::getNextID()
                 return currID + 1;
             }
         }
-    }else if(mode == checkMode){
+    }
+        break;
+    case checkMode:{
         if(fromID != -1)
             return getRandomByFromTo(fromID, toID);
         else
             return getRandCardNum(getTrueSize());
+    }
+        break;
+    case trainMode:
+        break;
+    case unfamiliarMode:{
+        if(unfamiliarId == -1){
+            return -1;
+        }
+        unfamiliarId = unfamiliarId + 1;
+        if(unfamiliarId == unfamiliarList->size()){
+            unfamiliarId = 0;
+        }
+        return unfamiliarList->at(unfamiliarId);
+    }
+        break;
+    default:
+        break;
     }
     return -1;
 }
@@ -274,6 +218,9 @@ void MemoryMain::updateStateUI()
         if(fromID != -1)
             showID = currID - fromID;
         getStateWin()->updateStateUI(showID, getNumSize());
+    }else if(unfamiliarMode){
+        int showID = unfamiliarList->at(unfamiliarId);
+        getStateWin()->updateStateUI(showID, getNumSize());
     }
 }
 
@@ -281,17 +228,28 @@ int MemoryMain::getTrueSize()
 {
     if(cardNums == nullptr)
         return 0;
+
+    //TODO
+    if(mode == unfamiliarMode){
+        return unfamiliarList->size();
+    }
     return cardNums->size();
 }
 
 int MemoryMain::getLast()
 {
+    if(mode == unfamiliarMode){
+        qDebug() << unfamiliarList;
+        return unfamiliarList->at(unfamiliarList->size() - 1);
+    }
+
     if(fromID == -1)
         return getTrueSize() - 1;
 
     int last = fromID + learnNum - 1;
     if(last > getTrueSize() - 1)
         last = getTrueSize() - 1;
+
     return last;
 }
 
@@ -342,12 +300,112 @@ void MemoryMain::resetLearn()
     updateByID(currID);
     updateStateUI();
     getStateWin()->resetTimerWin();
-
 }
 
 int MemoryMain::getRandomByFromTo(int from, int to)
 {
     return rand() % (to - from) + from + 1;
+}
+
+void MemoryMain::copyText(QString text)
+{
+    QClipboard *clipboard = QApplication::clipboard();   //获取系统剪贴板指针
+    //QString originalText = clipboard->text();         //获取剪贴板上文本信息
+    clipboard->setText(text);                  //设置剪贴板内容</span>
+}
+
+bool MemoryMain::isEnded()
+{
+    switch (mode) {
+    case studyMode:
+        return currID == getLast();
+        break;
+    case checkMode:
+        return fromID != -1 && backStack.size() + 1 == learnNum;
+        break;
+    case trainMode:
+        break;
+    case unfamiliarMode:
+        if(backStack.size() + 1 == unfamiliarList->size()){
+            return true;
+        }
+        break;
+    default:
+        assert(0);
+        return false;
+    }
+
+    return false;
+}
+
+void MemoryMain::handleKeyNext()
+{
+    switch (mode) {
+    case studyMode:
+    case checkMode:
+    case unfamiliarMode:
+        if(!isShowPic){
+            isShowPic = true;
+            showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
+        }else{
+            if(isEnded()){
+                getStateWin()->stopTimerWin();
+                QString msg = "Congratulations, You've finished the study.\nDid you want to continue study?";
+                //msg += "cost " + QString::number(getStateWin()->getTimerWinSec()) + " seconds";
+
+                int choose = QMessageBox::information(this, "Info", msg,
+                                                      QMessageBox::Ok, QMessageBox::Cancel);
+
+                if(choose == QMessageBox::Ok){
+                    getStateWin()->startTimeWin();
+                    resetLearn();
+                }
+
+            }else{
+                isShowPic = false;
+                backStack.push(currID);
+                updateByID(getNextID());
+                updateStateUI();
+            }
+        }
+        break;
+    case trainMode:
+        getTrainWin()->nextShow();
+        break;
+    }
+}
+
+void MemoryMain::handleKeyLast()
+{
+    switch (mode) {
+    case studyMode:
+    case checkMode:
+        if(!isShowPic){
+            //回退到上一个
+            if(!backStack.isEmpty()){
+                int last = backStack.pop();
+                updateByID(last);
+                updateStateUI();
+            }else{
+                QMessageBox::information(this, "提示", "已经是第一个了",
+                                         QMessageBox::Ok);
+            }
+        }else{
+            isShowPic = false;
+            updateByID(currID);
+        }
+        break;
+    case trainMode:{
+        bool ok = getTrainWin()->lastShow();
+        if(!ok){
+            QMessageBox::information(this, "提示", "已经是第一个了",
+                                     QMessageBox::Ok);
+        }
+        break;
+    }
+    case unfamiliarMode:
+        break;
+    }
 }
 
 void MemoryMain::slotChooseStydyMode(bool triggle)
@@ -398,6 +456,28 @@ void MemoryMain::slotChooseTrainMode(bool triggle)
     }
 }
 
+void MemoryMain::slotunfamiliarMode(bool triggle)
+{
+    if(triggle){
+        mode = unfamiliarMode;
+
+        leftWidget->close();
+        leftWidget = new ShowWin(this);
+        leftWidget->show();
+        rightWidget->show();
+        isShowPic = false;
+        backStack.clear();
+        updateByID(unfamiliarList->at(0));
+        unfamiliarId = 0;
+        showImageAndLabel(currPath, currNumText, isShowPic);
+        getStateWin()->resetTimerWin();
+        initScope();
+
+        updateLayout();
+        updateStateUI();
+    }
+}
+
 void MemoryMain::slotChooseScope()
 {
     dialog = new LearnScopeDialog(this);
@@ -428,6 +508,82 @@ void MemoryMain::slotChooseScope()
     }
 }
 
+void MemoryMain::slotAddToUnfamiliar(int id)
+{
+    for(int i = 0; i < unfamiliarList->size(); i++){
+        if(unfamiliarList->at(i) == id){
+            return;
+        }
+    }
 
+    unfamiliarList->append(id);
+}
 
+void MemoryMain::slotCopyText()
+{
+    copyText(currNumText);
+}
 
+void MemoryMain::slotAddToUnfamiliarAction()
+{
+    emit signalAddToUnfamiliar(currID);
+}
+
+void MemoryMain::initMenuBar()
+{
+    menuBar = new QMenuBar(this);
+    menuBar->setFixedSize(QSize(this->width(), menuBar->height()));
+
+    QMenu* fileMenu = menuBar->addMenu(tr("&File"));
+    QAction* exitAction = fileMenu->addAction("Exit");
+
+    QMenu* settingMenu = menuBar->addMenu(tr("&Setting"));
+    QMenu* modeMenu = settingMenu->addMenu(tr("&mode"));
+    QAction* scopeMenuAction = settingMenu->addAction(tr("&study scope"));
+
+    QAction *stydyModeAction = new QAction("&stydy mode");
+    QAction *checkModeAction = new QAction("&check mode");
+    QAction *trainModeAction = new QAction("&train mode");
+    QAction *unfamiliarModeAction = new QAction("&unfamiliar mode");
+
+    stydyModeAction->setCheckable(true);
+    checkModeAction->setCheckable(true);
+    trainModeAction->setCheckable(true);
+    unfamiliarModeAction->setCheckable(true);
+
+    QActionGroup* modeActionGroup = new QActionGroup(this);
+    modeActionGroup->addAction(stydyModeAction);
+    modeActionGroup->addAction(checkModeAction);
+    modeActionGroup->addAction(trainModeAction);
+    modeActionGroup->addAction(unfamiliarModeAction);
+
+    stydyModeAction->setChecked(true);
+    modeActionGroup->setExclusive(true);
+
+    modeMenu->addActions(modeActionGroup->actions());
+
+    connect(stydyModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseStydyMode(bool)));
+    connect(checkModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseCheckMode(bool)));
+    connect(scopeMenuAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseScope()));
+    connect(trainModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseTrainMode(bool)));
+    connect(unfamiliarModeAction, SIGNAL(triggered(bool)), this, SLOT(slotunfamiliarMode(bool)));
+
+    connect(exitAction, SIGNAL(triggered(bool)), this, SLOT(close()));
+}
+
+void MemoryMain::contextMenuEvent(QContextMenuEvent *)
+{
+    QMenu *popMenu = new QMenu(this);
+
+    QAction *copyAction = new QAction("copy");
+    QAction *addToDonotKnowAction = new QAction("add to unfamiliar");
+
+    popMenu->addAction(copyAction);
+    popMenu->addAction(addToDonotKnowAction);
+
+    connect(copyAction, SIGNAL(triggered(bool)), this, SLOT(slotCopyText()));
+    connect(addToDonotKnowAction, SIGNAL(triggered(bool)), this, SLOT(slotAddToUnfamiliarAction()));
+    connect(this, SIGNAL(signalAddToUnfamiliar(int)), this, SLOT(slotAddToUnfamiliar(int)));
+
+    popMenu->exec(QCursor::pos());
+}

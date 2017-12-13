@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>239</width>
+    <width>259</width>
     <height>268</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
     <rect>
      <x>10</x>
      <y>50</y>
-     <width>81</width>
+     <width>101</width>
      <height>21</height>
     </rect>
    </property>
@@ -38,10 +38,10 @@
     <string>study num</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="countEdit">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>130</x>
      <y>50</y>
      <width>113</width>
      <height>21</height>
@@ -200,7 +200,7 @@
   <widget class="QLineEdit" name="totalEdit">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>130</x>
      <y>20</y>
      <width>113</width>
      <height>21</height>
@@ -218,7 +218,7 @@
     <rect>
      <x>10</x>
      <y>20</y>
-     <width>81</width>
+     <width>91</width>
      <height>21</height>
     </rect>
    </property>
@@ -239,7 +239,7 @@
   <tabstop>obtun</tabstop>
   <tabstop>cancelbtn</tabstop>
   <tabstop>numberEdit</tabstop>
-  <tabstop>lineEdit</tabstop>
+  <tabstop>countEdit</tabstop>
   <tabstop>totalEdit</tabstop>
  </tabstops>
  <resources/>

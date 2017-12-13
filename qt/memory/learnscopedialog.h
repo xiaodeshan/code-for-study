@@ -4,8 +4,10 @@
 #include <QDialog>
 #include <QMessageBox>
 #include "memorymain.h"
+#include "global.h"
+#include <assert.h>
 
-#define DEFOULT_NUM 20
+#define DEFOULT_LEARN_NUM 20
 namespace Ui {
 class LearnScopeDialog;
 }
@@ -20,27 +22,28 @@ public:
     explicit LearnScopeDialog(QWidget *parent = 0);
     ~LearnScopeDialog();
 
+    // parent win
     MemoryMain *parentWin;
 
     void initUI();
-    void initData();
+    void initDataByMode(StudyMode mode);
+    void initUIByMode(StudyMode mode);
 
     QString getFromText();
+
+    // from to total
     int getStartID();
-    int getTotal();
     int getToID();
+    int getTotal();
 
     int startID;
     int endID;
 
 private slots:
     void on_cancelbtn_clicked();
-
     void on_obtun_clicked();
-
-    void on_fromEdit_textChanged(const QString &arg1);
-
-    void on_endEdit_textChanged(const QString &arg1);
+    void on_fromEdit_textChanged(const QString &);
+    void on_endEdit_textChanged(const QString &);
 
 private:
     Ui::LearnScopeDialog *ui;

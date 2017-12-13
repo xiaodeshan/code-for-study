@@ -17,27 +17,25 @@
 #include <qlabel.h>
 #include <QHBoxLayout>
 #include <QProgressBar>
-#include "learnscopedialog.h"
 #include "trainwin.h"
 #include "timerlabel.h"
 #include "statewin.h"
 #include "showwin.h"
+#include <QContextMenuEvent>
+#include <QApplication>
+#include <QClipboard>
+#include "learnscopedialog.h"
+#include "global.h"
 
 #define CARD_PATH "./image/"
 #define CARD_NAME_PATH "./raw/names.txt"
 
 class LearnScopeDialog;
 
+
 class MemoryMain : public QWidget
 {
     Q_OBJECT
-
-public:
-    enum Mode{
-        studyMode,
-        checkMode,
-        trainMode
-    };
 
 public:
     explicit MemoryMain(QWidget *parent = 0);
@@ -48,13 +46,16 @@ public:
     // 根据文件名来提取的id,可能存在"01"等id
     QStringList* cardNums;
     QStringList* cardNames;
+    QList<int>*  unfamiliarList;
+    int unfamiliarId;
+
     bool isShowPic;
     QString currPath;
     QString currNumText;
     int currID;
     QStack<int> backStack;
     QMenuBar *menuBar;
-    Mode mode;
+    StudyMode mode;
     // 是否首次运行
     bool justStart;
 
@@ -93,14 +94,28 @@ public:
     int getNumByText(QString data);
     void resetLearn();
     int getRandomByFromTo(int from, int to);
+    void copyText(QString);
+    bool isEnded();
+    void handleKeyNext();
+    void handleKeyLast();
+
 
     void keyPressEvent(QKeyEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event);
 
 public slots:
     void slotChooseStydyMode(bool triggle);
     void slotChooseCheckMode(bool triggle);
     void slotChooseTrainMode(bool triggle);
+    void slotunfamiliarMode(bool triggle);
     void slotChooseScope();
+    void slotAddToUnfamiliar(int id);
+    void slotCopyText();
+    void slotAddToUnfamiliarAction();
+
+signals:
+    void signalAddToUnfamiliar(int id);
+
 
 };
 
