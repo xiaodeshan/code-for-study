@@ -175,16 +175,18 @@ void MemoryMain::initMenuBar()
 {
     menuBar = new QMenuBar(this);
 
-    QMenu* fileMenu = menuBar->addMenu(tr("&File"));
-    QAction* exitAction = fileMenu->addAction("exit");
+    menuBar->setFixedSize(QSize(this->width(), menuBar->height()));
 
-    QMenu* settingMenu = menuBar->addMenu(tr("&setting"));
+    QMenu* fileMenu = menuBar->addMenu(tr("&File"));
+    QAction* exitAction = fileMenu->addAction("Exit");
+
+    QMenu* settingMenu = menuBar->addMenu(tr("&Setting"));
     QMenu* modeMenu = settingMenu->addMenu(tr("&mode"));
     QAction* scopeMenuAction = settingMenu->addAction(tr("&study scope"));
 
-    QAction *stydyModeAction = new QAction("stydy mode");
-    QAction *checkModeAction = new QAction("check mode");
-    QAction *trainModeAction = new QAction("train mode");
+    QAction *stydyModeAction = new QAction("&stydy mode");
+    QAction *checkModeAction = new QAction("&check mode");
+    QAction *trainModeAction = new QAction("&train mode");
     stydyModeAction->setCheckable(true);
     checkModeAction->setCheckable(true);
     trainModeAction->setCheckable(true);
