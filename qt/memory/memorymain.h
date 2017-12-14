@@ -41,9 +41,9 @@ public:
     explicit MemoryMain(QWidget *parent = 0);
     ~MemoryMain();
 
-    // 变量
+    // variables
 
-    // 根据文件名来提取的id,可能存在"01"等id
+    // num is a id on behalf of the filename. for example the "01" of the "01.png"
     QStringList* cardNums;
     QStringList* cardNames;
     QList<int>*  unfamiliarList;
@@ -56,10 +56,10 @@ public:
     QStack<int> backStack;
     QMenuBar *menuBar;
     StudyMode mode;
-    // 是否首次运行
+    // is it the first running
     bool justStart;
 
-    //学习范围
+    //study scope
     int learnNum;
     int fromID;
     int toID;

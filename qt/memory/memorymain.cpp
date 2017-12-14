@@ -134,7 +134,7 @@ void MemoryMain::updateByID(int id)
 void MemoryMain::initBackground()
 {
     QPalette pal(this->palette());
-    //设置背景黑色
+    //setting background color
     pal.setColor(QPalette::Background, Qt::white);
     this->setAutoFillBackground(true);
     this->setPalette(pal);
@@ -142,9 +142,9 @@ void MemoryMain::initBackground()
 
 void MemoryMain::initUI()
 {
-    //主界面
+    //main page
     leftWidget = new ShowWin(this);
-    //学习模式的进度条
+    //status info windows
     rightWidget = new StateWin(this);
     updateLayout();
     setMinimumSize(QSize(1077, 913));
@@ -154,7 +154,7 @@ void MemoryMain::initUI()
 
 void MemoryMain::initScope()
 {
-    //学习范围
+    //study scope
     learnNum = -1;
     fromID = -1;
 }
@@ -309,9 +309,9 @@ int MemoryMain::getRandomByFromTo(int from, int to)
 
 void MemoryMain::copyText(QString text)
 {
-    QClipboard *clipboard = QApplication::clipboard();   //获取系统剪贴板指针
-    //QString originalText = clipboard->text();         //获取剪贴板上文本信息
-    clipboard->setText(text);                  //设置剪贴板内容</span>
+    QClipboard *clipboard = QApplication::clipboard();   //get the pointer of clipboard
+    //QString originalText = clipboard->text();          //get the text of clipboard
+    clipboard->setText(text);                            //set clipboard text
 }
 
 bool MemoryMain::isEnded()
@@ -381,13 +381,13 @@ void MemoryMain::handleKeyLast()
     case studyMode:
     case checkMode:
         if(!isShowPic){
-            //回退到上一个
+            //back to last
             if(!backStack.isEmpty()){
                 int last = backStack.pop();
                 updateByID(last);
                 updateStateUI();
             }else{
-                QMessageBox::information(this, "提示", "已经是第一个了",
+                QMessageBox::information(this, "info", "It is the first one",
                                          QMessageBox::Ok);
             }
         }else{
@@ -398,7 +398,7 @@ void MemoryMain::handleKeyLast()
     case trainMode:{
         bool ok = getTrainWin()->lastShow();
         if(!ok){
-            QMessageBox::information(this, "提示", "已经是第一个了",
+            QMessageBox::information(this, "info", "It is the first one",
                                      QMessageBox::Ok);
         }
         break;
