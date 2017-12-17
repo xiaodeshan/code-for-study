@@ -26,8 +26,8 @@ public:
     MemoryMain *parentWin;
 
     void initUI();
-    void initDataByMode(StudyMode mode);
-    void initUIByMode(StudyMode mode);
+    void initDataByMode(StudyModeEnum mode);
+    void initUIByMode(StudyModeEnum mode);
 
     QString getFromText();
 

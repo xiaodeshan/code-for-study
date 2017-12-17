@@ -30,18 +30,18 @@ void LearnScopeDialog::initUI()
     initUIByMode(parentWin->mode);
 }
 
-void LearnScopeDialog::initDataByMode(StudyMode mode)
+void LearnScopeDialog::initDataByMode(StudyModeEnum mode)
 {
     switch (mode) {
-    case studyMode:
+    case studyModezzzzzz:
         ui->fromEdit->setText(parentWin->currNumText);
         break;
-    case checkMode:
+    case checkModezzzzzzzzzzzz:
         ui->fromEdit->setText("00");
         break;
-    case trainMode:
+    case trainModezzzzzzzzzzzz:
         break;
-    case unfamiliarMode:
+    case unfamiliarModezzzzzzzzzz:
         assert(0);
         break;
     default:
@@ -52,27 +52,27 @@ void LearnScopeDialog::initDataByMode(StudyMode mode)
     ui->totalEdit->setText(QString::number(parentWin->getTrueSize()));
 }
 
-void LearnScopeDialog::initUIByMode(StudyMode mode)
+void LearnScopeDialog::initUIByMode(StudyModeEnum mode)
 {
     switch (mode) {
-    case studyMode:
+    case studyModezzzzzz:
         ui->countEdit->setEnabled(false);
         ui->fromEdit->setFocus();
         ui->fromEdit->selectedText();
         break;
-    case checkMode:
+    case checkModezzzzzzzzzzzz:
         //choose scope to check
         ui->countEdit->setEnabled(true);
         ui->endEdit->setFocus();
         break;
-    case trainMode:
+    case trainModezzzzzzzzzzzz:
         ui->countEdit->setEnabled(true);
         ui->fromEdit->setEnabled(false);
         ui->endEdit->setEnabled(false);
         ui->countEdit->setFocus();
         ui->countEdit->selectedText();
         break;
-    case unfamiliarMode:
+    case unfamiliarModezzzzzzzzzz:
         assert(0);
         break;
     default:
@@ -84,16 +84,16 @@ void LearnScopeDialog::initUIByMode(StudyMode mode)
 
 void LearnScopeDialog::on_obtun_clicked()
 {
-    StudyMode prentMode = parentWin->mode;
+    StudyModeEnum prentMode = parentWin->mode;
 
     switch (prentMode) {
-    case studyMode:
+    case studyModezzzzzz:
         //TODO
         break;
-    case checkMode:
+    case checkModezzzzzzzzzzzz:
         //TODO
         break;
-    case trainMode:{
+    case trainModezzzzzzzzzzzz:{
         QString totalStr = ui->countEdit->text();
         if(totalStr == "" || totalStr.toInt() == 0){
             QMessageBox::information(this, "info", "please input valid value",
@@ -103,7 +103,7 @@ void LearnScopeDialog::on_obtun_clicked()
 
         break;
     }
-    case unfamiliarMode:
+    case unfamiliarModezzzzzzzzzz:
         assert(0);
         break;
     default:
@@ -119,7 +119,7 @@ void LearnScopeDialog::on_fromEdit_textChanged(const QString &data)
     int pos = parentWin->getNumByText(data);
     startID = pos;
     if(pos != -1){
-        if(parentWin->mode == studyMode){
+        if(parentWin->mode == studyModezzzzzz){
             if(startID > endID){
                 ui->countEdit->setText("");
             }else{
@@ -128,7 +128,7 @@ void LearnScopeDialog::on_fromEdit_textChanged(const QString &data)
         }
         ui->numberEdit->setText(QString::number(pos));
     }else{
-        if(parentWin->mode == studyMode){
+        if(parentWin->mode == studyModezzzzzz){
             ui->numberEdit->setText("");
         }
     }
@@ -139,7 +139,7 @@ void LearnScopeDialog::on_endEdit_textChanged(const QString &data)
     int pos = parentWin->getNumByText(data);
     endID = pos;
     if(pos != -1){
-        if(parentWin->mode == studyMode){
+        if(parentWin->mode == studyModezzzzzz){
             if(startID > endID){
                 ui->countEdit->setText("");
             }else{
@@ -147,7 +147,7 @@ void LearnScopeDialog::on_endEdit_textChanged(const QString &data)
             }
         }
     }else{
-        if(parentWin->mode == studyMode){
+        if(parentWin->mode == studyModezzzzzz){
             ui->countEdit->setText("");
         }
     }

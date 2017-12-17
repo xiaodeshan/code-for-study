@@ -11,6 +11,23 @@ MemoryMain::~MemoryMain()
 {
 }
 
+void MemoryMain::init()
+{
+    widgetLayout = new QHBoxLayout();
+
+    isShowPic = false;
+    readAllCardInfoFromFile(CARD_NAME_PATH);
+
+    initMode();
+
+    initSrand();
+    initMenuBar();
+    initBackground();
+    justStart = true;
+    mode = studyModezzzzzz;
+    initScope();
+}
+
 
 void MemoryMain::readAllCardInfoFromFile(QString path)
 {
@@ -62,19 +79,7 @@ void MemoryMain::showImageAndLabel(QString path, QString text, bool ispic)
     getShowWin()->showImageAndLabel(path, text, ispic);
 }
 
-void MemoryMain::init()
-{
-    widgetLayout = new QHBoxLayout();
-    initUI();
-    isShowPic = false;
-    readAllCardInfoFromFile(CARD_NAME_PATH);
-    initSrand();
-    initMenuBar();
-    initBackground();
-    justStart = true;
-    mode = studyMode;
-    initScope();
-}
+
 
 int MemoryMain::getNumSize()
 {
@@ -82,17 +87,17 @@ int MemoryMain::getNumSize()
         return getTrueSize();
 
     switch (mode) {
-    case studyMode:{
+    case studyModezzzzzz:{
         int sizeT = getLast() - fromID + 1;
         return learnNum > sizeT ? sizeT : learnNum;
         break;
     }
-    case checkMode:
+    case checkModezzzzzzzzzzzz:
         return learnNum;
         break;
-    case trainMode:
+    case trainModezzzzzzzzzzzz:
         break;
-    case unfamiliarMode:
+    case unfamiliarModezzzzzzzzzz:
         return unfamiliarList->size();
         break;
     default:
@@ -159,10 +164,17 @@ void MemoryMain::initScope()
     fromID = -1;
 }
 
+void MemoryMain::initMode()
+{
+    // 开始是学习模式
+    currModeContext = new StudyMode(this);
+    currModeContext->handlerChoosen();
+}
+
 int MemoryMain::getNextID()
 {
     switch (mode) {
-    case studyMode:{
+    case studyModezzzzzz:{
         if(justStart){
             justStart = false;
             return 0;
@@ -179,16 +191,16 @@ int MemoryMain::getNextID()
         }
     }
         break;
-    case checkMode:{
+    case checkModezzzzzzzzzzzz:{
         if(fromID != -1)
             return getRandomByFromTo(fromID, toID);
         else
             return getRandCardNum(getTrueSize());
     }
         break;
-    case trainMode:
+    case trainModezzzzzzzzzzzz:
         break;
-    case unfamiliarMode:{
+    case unfamiliarModezzzzzzzzzz:{
         if(unfamiliarId == -1){
             return -1;
         }
@@ -213,12 +225,12 @@ void MemoryMain::startProg()
 
 void MemoryMain::updateStateUI()
 {
-    if(mode == studyMode){
+    if(mode == studyModezzzzzz){
         int showID = currID;
         if(fromID != -1)
             showID = currID - fromID;
         getStateWin()->updateStateUI(showID, getNumSize());
-    }else if(unfamiliarMode){
+    }else if(unfamiliarModezzzzzzzzzz){
         int showID = unfamiliarList->at(unfamiliarId);
         getStateWin()->updateStateUI(showID, getNumSize());
     }
@@ -230,7 +242,7 @@ int MemoryMain::getTrueSize()
         return 0;
 
     //TODO
-    if(mode == unfamiliarMode){
+    if(mode == unfamiliarModezzzzzzzzzz){
         return unfamiliarList->size();
     }
     return cardNums->size();
@@ -238,7 +250,7 @@ int MemoryMain::getTrueSize()
 
 int MemoryMain::getLast()
 {
-    if(mode == unfamiliarMode){
+    if(mode == unfamiliarModezzzzzzzzzz){
         qDebug() << unfamiliarList;
         return unfamiliarList->at(unfamiliarList->size() - 1);
     }
@@ -317,15 +329,15 @@ void MemoryMain::copyText(QString text)
 bool MemoryMain::isEnded()
 {
     switch (mode) {
-    case studyMode:
+    case studyModezzzzzz:
         return currID == getLast();
         break;
-    case checkMode:
+    case checkModezzzzzzzzzzzz:
         return fromID != -1 && backStack.size() + 1 == learnNum;
         break;
-    case trainMode:
+    case trainModezzzzzzzzzzzz:
         break;
-    case unfamiliarMode:
+    case unfamiliarModezzzzzzzzzz:
         if(backStack.size() + 1 == unfamiliarList->size()){
             return true;
         }
@@ -341,9 +353,9 @@ bool MemoryMain::isEnded()
 void MemoryMain::handleKeyNext()
 {
     switch (mode) {
-    case studyMode:
-    case checkMode:
-    case unfamiliarMode:
+    case studyModezzzzzz:
+    case checkModezzzzzzzzzzzz:
+    case unfamiliarModezzzzzzzzzz:
         if(!isShowPic){
             isShowPic = true;
             showImageAndLabel(currPath, currNumText + " " + cardNames->at(currID), isShowPic);
@@ -351,7 +363,6 @@ void MemoryMain::handleKeyNext()
             if(isEnded()){
                 getStateWin()->stopTimerWin();
                 QString msg = "Congratulations, You've finished the study.\nDid you want to continue study?";
-                //msg += "cost " + QString::number(getStateWin()->getTimerWinSec()) + " seconds";
 
                 int choose = QMessageBox::information(this, "Info", msg,
                                                       QMessageBox::Ok, QMessageBox::Cancel);
@@ -369,7 +380,7 @@ void MemoryMain::handleKeyNext()
             }
         }
         break;
-    case trainMode:
+    case trainModezzzzzzzzzzzz:
         getTrainWin()->nextShow();
         break;
     }
@@ -378,8 +389,8 @@ void MemoryMain::handleKeyNext()
 void MemoryMain::handleKeyLast()
 {
     switch (mode) {
-    case studyMode:
-    case checkMode:
+    case studyModezzzzzz:
+    case checkModezzzzzzzzzzzz:
         if(!isShowPic){
             //back to last
             if(!backStack.isEmpty()){
@@ -395,7 +406,7 @@ void MemoryMain::handleKeyLast()
             updateByID(currID);
         }
         break;
-    case trainMode:{
+    case trainModezzzzzzzzzzzz:{
         bool ok = getTrainWin()->lastShow();
         if(!ok){
             QMessageBox::information(this, "info", "It is the first one",
@@ -403,7 +414,7 @@ void MemoryMain::handleKeyLast()
         }
         break;
     }
-    case unfamiliarMode:
+    case unfamiliarModezzzzzzzzzz:
         break;
     }
 }
@@ -411,7 +422,7 @@ void MemoryMain::handleKeyLast()
 void MemoryMain::slotChooseStydyMode(bool triggle)
 {
     if(triggle){
-        mode = studyMode;
+        mode = studyModezzzzzz;
         leftWidget->close();
         leftWidget = new ShowWin(this);
         leftWidget->show();
@@ -428,7 +439,7 @@ void MemoryMain::slotChooseStydyMode(bool triggle)
 void MemoryMain::slotChooseCheckMode(bool triggle)
 {
     if(triggle){
-        mode = checkMode;
+        mode = checkModezzzzzzzzzzzz;
         leftWidget->close();
         leftWidget = new ShowWin(this);
         leftWidget->show();
@@ -451,7 +462,7 @@ void MemoryMain::slotChooseTrainMode(bool triggle)
         leftWidget->close();
         leftWidget = new TrainWin(this);
         leftWidget->show();
-        mode = trainMode;
+        mode = trainModezzzzzzzzzzzz;
         updateLayout();
     }
 }
@@ -459,7 +470,7 @@ void MemoryMain::slotChooseTrainMode(bool triggle)
 void MemoryMain::slotunfamiliarMode(bool triggle)
 {
     if(triggle){
-        mode = unfamiliarMode;
+        mode = unfamiliarModezzzzzzzzzz;
 
         leftWidget->close();
         leftWidget = new ShowWin(this);
@@ -486,14 +497,14 @@ void MemoryMain::slotChooseScope()
     if(result){
         backStack.clear();
 
-        if(mode == studyMode){
+        if(mode == studyModezzzzzz){
             learnNum = dialog->getTotal();
             fromID = dialog->getStartID();
             currID = fromID;
             updateByID(currID);
             updateStateUI();
             getStateWin()->resetTimerWin();
-        }else if(mode == checkMode){
+        }else if(mode == checkModezzzzzzzzzzzz){
             currID = getNextID();
             learnNum = dialog->getTotal();
             fromID = dialog->getStartID();

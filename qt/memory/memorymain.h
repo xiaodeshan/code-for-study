@@ -26,12 +26,19 @@
 #include <QClipboard>
 #include "learnscopedialog.h"
 #include "global.h"
+#include "modeparent.h"
+#include "studymode.h"
+#include "checkmode.h"
 
 #define CARD_PATH "./image/"
 #define CARD_NAME_PATH "./raw/names.txt"
 
 class LearnScopeDialog;
-
+class ModeParent;
+class StudyMode;
+class CheckMode;
+class TrainMode;
+class UnfamilarMode;
 
 class MemoryMain : public QWidget
 {
@@ -55,7 +62,7 @@ public:
     int currID;
     QStack<int> backStack;
     QMenuBar *menuBar;
-    StudyMode mode;
+    StudyModeEnum mode;
     // is it the first running
     bool justStart;
 
@@ -70,6 +77,9 @@ public:
     QWidget *leftWidget;
     LearnScopeDialog* dialog;
 
+    // mode
+    ModeParent *currModeContext;
+
     int getRandCardNum(int size);
     QString getPicPathByid(int id);
     int getNextID();
@@ -81,6 +91,7 @@ public:
     void initBackground();
     void initUI();
     void initScope();
+    void initMode();
     void readAllCardInfoFromFile(QString path);
     void showImageAndLabel(QString path, QString text, bool ispic);
     void startProg();

@@ -33,7 +33,11 @@ SOURCES += \
     trainwin.cpp \
     timerlabel.cpp \
     statewin.cpp \
-    showwin.cpp
+    showwin.cpp \
+    studymode.cpp \
+    checkmode.cpp \
+    trainmode.cpp \
+    unfamilarmode.cpp
 
 HEADERS += \
     memorymain.h \
@@ -42,8 +46,20 @@ HEADERS += \
     timerlabel.h \
     statewin.h \
     showwin.h \
-    global.h
+    global.h \
+    modeparent.h \
+    studymode.h \
+    modeparent.h \
+    statewin.h \
+    checkmode.h \
+    trainmode.h \
+    unfamilarmode.h
 
 FORMS += \
     learnscopedialog.ui
+
+DISTFILES += \
+    README.md \
+    bugs.txt
+
 

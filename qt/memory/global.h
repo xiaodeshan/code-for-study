@@ -1,11 +1,11 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-enum StudyMode{
-    studyMode,
-    checkMode,
-    trainMode,
-    unfamiliarMode
+enum StudyModeEnum{
+    studyModezzzzzz,
+    checkModezzzzzzzzzzzz,
+    trainModezzzzzzzzzzzz,
+    unfamiliarModezzzzzzzzzz
 };
 
 #endif // GLOBAL_H
