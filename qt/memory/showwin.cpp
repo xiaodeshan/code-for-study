@@ -15,7 +15,7 @@ void ShowWin::initUi()
 
     leftLayout->addWidget(imageLabel, 0, Qt::AlignCenter);
     leftLayout->addWidget(numLabel, 0, Qt::AlignCenter);
-    leftLayout->setContentsMargins(0, 0, 0, 30);
+    leftLayout->setContentsMargins(0, 10, 0, 50);
 
     this->setLayout(leftLayout);
 }

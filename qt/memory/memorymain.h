@@ -76,8 +76,6 @@ public:
 
     // ui
     QHBoxLayout *widgetLayout;
-    QWidget *rightWidget;
-    QWidget *leftWidget;
     LearnScopeDialog* dialog;
 
     // mode

@@ -78,7 +78,7 @@ QString MemoryMain::getPicPathByid(int id)
 
 void MemoryMain::showImageAndLabel(QString path, QString text, bool ispic)
 {
-    getShowWin()->showImageAndLabel(path, text, ispic);
+    //getShowWin()->showImageAndLabel(path, text, ispic);
 }
 
 
@@ -226,10 +226,10 @@ void MemoryMain::updateStateUI()
         int showID = currID;
         if(fromID != -1)
             showID = currID - fromID;
-        getStateWin()->updateStateUI(showID, getNumSize());
+        //getStateWin()->updateStateUI(showID, getNumSize());
     }else if(unfamiliarModezzzzzzzzzz){
         int showID = unfamiliarList->at(unfamiliarId);
-        getStateWin()->updateStateUI(showID, getNumSize());
+        //getStateWin()->updateStateUI(showID, getNumSize());
     }
 }
 
@@ -259,28 +259,19 @@ int MemoryMain::getLast()
 
 void MemoryMain::updateLayout(QWidget *mainPageWidget, QWidget *rightStatusWidget)
 {   
-    if(leftWidget != nullptr)
+    if(mainPageWidget != nullptr)
         widgetLayout->addWidget(mainPageWidget, 4);
-    if(rightWidget != nullptr)
+    if(rightStatusWidget != nullptr)
         widgetLayout->addWidget(rightStatusWidget, 1);
 
     this->setLayout(widgetLayout);
 }
 
-StateWin *MemoryMain::getStateWin()
-{
-    return (StateWin*)(rightWidget);
-}
 
-ShowWin *MemoryMain::getShowWin()
-{
-    return (ShowWin*)(leftWidget);
-}
-
-TrainWin *MemoryMain::getTrainWin()
-{
-    return (TrainWin*)(leftWidget);
-}
+//TrainWin *MemoryMain::getTrainWin()
+//{
+//    return (TrainWin*)(leftWidget);
+//}
 
 int MemoryMain::getNumByText(QString data)
 {
@@ -303,7 +294,7 @@ void MemoryMain::resetLearn()
     }
     updateByID(currID);
     updateStateUI();
-    getStateWin()->resetTimerWin();
+    //getStateWin()->resetTimerWin();
 }
 
 int MemoryMain::getRandomByFromTo(int from, int to)
@@ -395,9 +386,9 @@ void MemoryMain::slotChooseCheckMode(bool triggle)
 {
     if(triggle){
         mode = checkModezzzzzzzzzzzz;
-        leftWidget->close();
-        leftWidget = new ShowWin(this);
-        leftWidget->show();
+        //leftWidget->close();
+        //leftWidget = new ShowWin(this);
+        //leftWidget->show();
         isShowPic = false;
         initScope();
 
@@ -413,10 +404,10 @@ void MemoryMain::slotChooseTrainMode(bool triggle)
 {
     if(triggle){
         //rightWidget->hide();
-        getStateWin()->resetTimerWin();
-        leftWidget->close();
-        leftWidget = new TrainWin(this);
-        leftWidget->show();
+        //getStateWin()->resetTimerWin();
+        //leftWidget->close();
+        //leftWidget = new TrainWin(this);
+        //leftWidget->show();
         mode = trainModezzzzzzzzzzzz;
         //updateLayout();
     }
@@ -427,16 +418,16 @@ void MemoryMain::slotunfamiliarMode(bool triggle)
     if(triggle){
         mode = unfamiliarModezzzzzzzzzz;
 
-        leftWidget->close();
-        leftWidget = new ShowWin(this);
-        leftWidget->show();
-        rightWidget->show();
+        //leftWidget->close();
+        //leftWidget = new ShowWin(this);
+        //leftWidget->show();
+        //rightWidget->show();
         isShowPic = false;
         backStack.clear();
         updateByID(unfamiliarList->at(0));
         unfamiliarId = 0;
         showImageAndLabel(currPath, currNumText, isShowPic);
-        getStateWin()->resetTimerWin();
+        //getStateWin()->resetTimerWin();
         initScope();
 
         //updateLayout();
@@ -458,7 +449,7 @@ void MemoryMain::slotChooseScope()
             currID = fromID;
             updateByID(currID);
             updateStateUI();
-            getStateWin()->resetTimerWin();
+            //getStateWin()->resetTimerWin();
         }else if(mode == checkModezzzzzzzzzzzz){
             currID = getNextID();
             learnNum = dialog->getTotal();
@@ -469,7 +460,7 @@ void MemoryMain::slotChooseScope()
 
             updateByID(currID);
             updateStateUI();
-            getStateWin()->resetTimerWin();
+            //getStateWin()->resetTimerWin();
         }
     }
 }
