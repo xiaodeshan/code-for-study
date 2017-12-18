@@ -3,12 +3,14 @@
 
 #include "modeparent.h"
 #include "memorymain.h"
+#include "learnscopeentity.h"
 
 class MemoryMain;
 class ModeParent;
+class LearnScopeEntity;
 
 
-class CheckMode : public ModeParent
+class CheckMode
 {
 public:
     explicit CheckMode(MemoryMain* m = nullptr);
@@ -19,6 +21,10 @@ public:
     void handlerLeft();
     void handlerRestart();
     void getModeName();
+    int getNextId();
+    int getLastId();
+    int getNumSize();
+    bool isEnded();
 };
 
 #endif // CHECKMODE_H

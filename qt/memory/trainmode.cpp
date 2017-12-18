@@ -34,3 +34,28 @@ void TrainMode::getModeName()
 {
 
 }
+
+int TrainMode::getNextId()
+{
+
+}
+
+int TrainMode::getLastId()
+{
+
+}
+
+int TrainMode::getNumSize()
+{
+
+}
+
+bool TrainMode::isEnded()
+{
+
+}
+
+void TrainMode::handleRestart()
+{
+
+}

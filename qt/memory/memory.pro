@@ -27,7 +27,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
+    main.cpp \
+    modeparent.cpp \
     memorymain.cpp \
     learnscopedialog.cpp \
     trainwin.cpp \
@@ -35,9 +36,10 @@ SOURCES += \
     statewin.cpp \
     showwin.cpp \
     studymode.cpp \
+    learnscopeentity.cpp \
     checkmode.cpp \
-    trainmode.cpp \
     unfamilarmode.cpp
+
 
 HEADERS += \
     memorymain.h \
@@ -51,6 +53,7 @@ HEADERS += \
     studymode.h \
     modeparent.h \
     statewin.h \
+    learnscopeentity.h \
     checkmode.h \
     trainmode.h \
     unfamilarmode.h

@@ -34,6 +34,8 @@
 #define CARD_NAME_PATH "./raw/names.txt"
 
 class LearnScopeDialog;
+class LearnScopeEntity;
+
 class ModeParent;
 class StudyMode;
 class CheckMode;
@@ -70,6 +72,7 @@ public:
     int learnNum;
     int fromID;
     int toID;
+    LearnScopeEntity *learnScopeEntity;
 
     // ui
     QHBoxLayout *widgetLayout;
@@ -98,7 +101,7 @@ public:
     void updateStateUI();
     int getTrueSize();
     int getLast();
-    void updateLayout();
+    void updateLayout(QWidget *mainPageWidget, QWidget *rightStatusWidget);
     StateWin* getStateWin();
     ShowWin* getShowWin();
     TrainWin *getTrainWin();
@@ -109,6 +112,7 @@ public:
     bool isEnded();
     void handleKeyNext();
     void handleKeyLast();
+    LearnScopeEntity getLearnScopeEntity();
 
 
     void keyPressEvent(QKeyEvent *event);

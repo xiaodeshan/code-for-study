@@ -34,3 +34,25 @@ void UnfamilarMode::getModeName()
 {
 
 }
+
+int UnfamilarMode::getNextId()
+{
+
+}
+
+int UnfamilarMode::getLastId()
+{
+
+}
+
+int UnfamilarMode::getNumSize()
+{
+
+}
+
+bool UnfamilarMode::isEnded()
+{
+
+}
+
+
