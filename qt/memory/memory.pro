@@ -31,6 +31,7 @@ SOURCES += \
     modeparent.cpp \
     memorymain.cpp \
     learnscopedialog.cpp \
+    trainmode.cpp \
     trainwin.cpp \
     timerlabel.cpp \
     statewin.cpp \

@@ -32,12 +32,11 @@ public:
     void handlerChoosen();
     void handlerLeft();
     void handlerRestart();
-    void getModeName();
+    QString getModeName();
     int getNextId();
     int getLastId();
     int getNumSize();
     bool isEnded();
-    void handleRestart();
 
 
     void showImageAndLabel(QString path, QString text, bool ispic);

@@ -17,7 +17,7 @@ void TrainMode::handlerLast()
 
 void TrainMode::handlerChoosen()
 {
-
+    qDebug() << "hahaha";
 }
 
 void TrainMode::handlerLeft()
@@ -30,9 +30,9 @@ void TrainMode::handlerRestart()
 
 }
 
-void TrainMode::getModeName()
+QString TrainMode::getModeName()
 {
-
+    return "训练模式";
 }
 
 int TrainMode::getNextId()
@@ -51,11 +51,6 @@ int TrainMode::getNumSize()
 }
 
 bool TrainMode::isEnded()
-{
-
-}
-
-void TrainMode::handleRestart()
 {
 
 }

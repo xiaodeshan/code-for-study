@@ -10,7 +10,7 @@ class ModeParent;
 class LearnScopeEntity;
 
 
-class CheckMode
+class CheckMode : public ModeParent
 {
 public:
     explicit CheckMode(MemoryMain* m = nullptr);
@@ -20,11 +20,28 @@ public:
     void handlerChoosen();
     void handlerLeft();
     void handlerRestart();
-    void getModeName();
+    QString getModeName();
     int getNextId();
     int getLastId();
     int getNumSize();
     bool isEnded();
+
+
+    int getRandomByFromTo(int from, int to);
+    void updateByID(int id);
+    void updateStateUI();
+    void showImageAndLabel(QString path, QString text, bool ispic);
+    void initSrand();
+
+    QStack<int> backStack;
+    bool isShowPic;
+    int currID;
+    QString currPath;
+    QString currNumText;
+
+    // ui
+    ShowWin *leftWidget;
+    StateWin *rightWidget;
 };
 
 #endif // CHECKMODE_H

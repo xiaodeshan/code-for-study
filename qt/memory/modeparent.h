@@ -21,7 +21,7 @@ public:
     virtual void handlerChoosen() = 0;
     virtual void handlerLeft() = 0;
     virtual void handlerRestart() = 0;
-    virtual void getModeName() = 0;
+    virtual QString getModeName() = 0;
     virtual int getNextId() = 0;
     virtual int getLastId() = 0;
     virtual int getNumSize() = 0;

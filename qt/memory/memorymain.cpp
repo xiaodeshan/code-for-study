@@ -19,15 +19,16 @@ void MemoryMain::init()
     isShowPic = false;
     readAllCardInfoFromFile(CARD_NAME_PATH);
 
+    initMode();
+
     initUI();
-    initSrand();
     initMenuBar();
     initBackground();
     justStart = true;
     mode = studyModezzzzzz;
     initScope();
 
-    initMode();
+
 }
 
 
@@ -65,23 +66,13 @@ int MemoryMain::getRandCardNum(int size)
     return rand() % size;
 }
 
-void MemoryMain::initSrand()
-{
-    srand(time(0));
-}
+
 
 QString MemoryMain::getPicPathByid(int id)
 {
     QString path = CARD_PATH + cardNums->at(id) + ".png";
     return path;
 }
-
-void MemoryMain::showImageAndLabel(QString path, QString text, bool ispic)
-{
-    //getShowWin()->showImageAndLabel(path, text, ispic);
-}
-
-
 
 int MemoryMain::getNumSize()
 {
@@ -134,7 +125,7 @@ void MemoryMain::updateByID(int id)
     currNumText = cardNums->at(id);
     currID = id;
 
-    showImageAndLabel(currPath, currNumText, isShowPic);
+    //showImageAndLabel(currPath, currNumText, isShowPic);
 }
 
 
@@ -166,6 +157,35 @@ void MemoryMain::initMode()
     // 开始是学习模式
     currModeContext = new StudyMode(this);
     currModeContext->handlerChoosen();
+
+    initModeList();
+}
+
+void MemoryMain::initModeList()
+{
+    modeList.append(new StudyMode(this));
+    modeList.append(new CheckMode(this));
+    modeList.append(new TrainMode(this));
+    modeList.append(new UnfamilarMode(this));
+}
+
+void MemoryMain::bindModeToMenu(QMenu *modeMenu)
+{
+    QActionGroup* modeActionGroup = new QActionGroup(this);
+    modeActionGroup->setExclusive(true);
+
+    for(int i = 0; i < modeList.size(); i++){
+        QAction *action = new QAction("&" + modeList.at(i)->getModeName());
+
+        action->setCheckable(true);
+        if(i == 0)
+            action->setChecked(true);
+        connect(action, SIGNAL(triggered(bool)), this, SLOT(slotModeClick()));
+
+        modeActionGroup->addAction(action);
+    }
+
+    modeMenu->addActions(modeActionGroup->actions());
 }
 
 int MemoryMain::getNextID()
@@ -336,50 +356,42 @@ bool MemoryMain::isEnded()
 void MemoryMain::handleKeyNext()
 {
     currModeContext->handlerNext();
-//    switch (mode) {
-//    case studyModezzzzzz:
-//    case checkModezzzzzzzzzzzz:
-//    case unfamiliarModezzzzzzzzzz:
-//        currModeContext->handlerNext();
-//        break;
-//    case trainModezzzzzzzzzzzz:
-//        getTrainWin()->nextShow();
-//        break;
-//    }
+    //    switch (mode) {
+    //    case studyModezzzzzz:
+    //    case checkModezzzzzzzzzzzz:
+    //    case unfamiliarModezzzzzzzzzz:
+    //        currModeContext->handlerNext();
+    //        break;
+    //    case trainModezzzzzzzzzzzz:
+    //        getTrainWin()->nextShow();
+    //        break;
+    //    }
 }
 
 void MemoryMain::handleKeyLast()
 {
     currModeContext->handlerLast();
 
-//    switch (mode) {
-//    case studyModezzzzzz:
-//    case checkModezzzzzzzzzzzz:
-//        currModeContext->handlerLast();
-//    case trainModezzzzzzzzzzzz:{
-//        bool ok = getTrainWin()->lastShow();
-//        if(!ok){
-//            QMessageBox::information(this, "info", "It is the first one",
-//                                     QMessageBox::Ok);
-//        }
-//        break;
-//    }
-//    case unfamiliarModezzzzzzzzzz:
-//        break;
-//    }
+    //    switch (mode) {
+    //    case studyModezzzzzz:
+    //    case checkModezzzzzzzzzzzz:
+    //        currModeContext->handlerLast();
+    //    case trainModezzzzzzzzzzzz:{
+    //        bool ok = getTrainWin()->lastShow();
+    //        if(!ok){
+    //            QMessageBox::information(this, "info", "It is the first one",
+    //                                     QMessageBox::Ok);
+    //        }
+    //        break;
+    //    }
+    //    case unfamiliarModezzzzzzzzzz:
+    //        break;
+    //    }
 }
 
 LearnScopeEntity MemoryMain::getLearnScopeEntity()
 {
     return *learnScopeEntity;
-}
-
-void MemoryMain::slotChooseStydyMode(bool triggle)
-{
-    if(triggle){
-        currModeContext = new StudyMode(this);
-        currModeContext->handlerChoosen();
-    }
 }
 
 void MemoryMain::slotChooseCheckMode(bool triggle)
@@ -426,7 +438,7 @@ void MemoryMain::slotunfamiliarMode(bool triggle)
         backStack.clear();
         updateByID(unfamiliarList->at(0));
         unfamiliarId = 0;
-        showImageAndLabel(currPath, currNumText, isShowPic);
+        //showImageAndLabel(currPath, currNumText, isShowPic);
         //getStateWin()->resetTimerWin();
         initScope();
 
@@ -486,6 +498,23 @@ void MemoryMain::slotAddToUnfamiliarAction()
     emit signalAddToUnfamiliar(currID);
 }
 
+void MemoryMain::slotModeClick()
+{
+    QAction* senderAction = (QAction*)sender();
+
+    // 投递到对应的处理函数
+    for(int i = 0; i < modeList.size(); i++){
+        //qDebug() << modeList.at(i)->getModeName() << " text" << senderAction->text();
+        if("&" + modeList.at(i)->getModeName() == senderAction->text()){
+            currModeContext->handlerLeft();
+            currModeContext = modeList.at(i);
+            currModeContext->handlerChoosen();
+            break;
+        }
+
+    }
+}
+
 void MemoryMain::initMenuBar()
 {
     menuBar = new QMenuBar(this);
@@ -498,33 +527,9 @@ void MemoryMain::initMenuBar()
     QMenu* modeMenu = settingMenu->addMenu(tr("&模式"));
     QAction* scopeMenuAction = settingMenu->addAction(tr("&学习范围"));
 
-    QAction *stydyModeAction = new QAction("&学习模式");
-    QAction *checkModeAction = new QAction("&检查模式");
-    QAction *trainModeAction = new QAction("&训练模式");
-    QAction *unfamiliarModeAction = new QAction("&不熟悉模式");
+    bindModeToMenu(modeMenu);
 
-    stydyModeAction->setCheckable(true);
-    checkModeAction->setCheckable(true);
-    trainModeAction->setCheckable(true);
-    unfamiliarModeAction->setCheckable(true);
-
-    QActionGroup* modeActionGroup = new QActionGroup(this);
-    modeActionGroup->addAction(stydyModeAction);
-    modeActionGroup->addAction(checkModeAction);
-    modeActionGroup->addAction(trainModeAction);
-    modeActionGroup->addAction(unfamiliarModeAction);
-
-    stydyModeAction->setChecked(true);
-    modeActionGroup->setExclusive(true);
-
-    modeMenu->addActions(modeActionGroup->actions());
-
-    connect(stydyModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseStydyMode(bool)));
-    connect(checkModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseCheckMode(bool)));
     connect(scopeMenuAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseScope()));
-    connect(trainModeAction, SIGNAL(triggered(bool)), this, SLOT(slotChooseTrainMode(bool)));
-    connect(unfamiliarModeAction, SIGNAL(triggered(bool)), this, SLOT(slotunfamiliarMode(bool)));
-
     connect(exitAction, SIGNAL(triggered(bool)), this, SLOT(close()));
 }
 

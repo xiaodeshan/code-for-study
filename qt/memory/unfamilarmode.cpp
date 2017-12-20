@@ -30,9 +30,9 @@ void UnfamilarMode::handlerRestart()
 
 }
 
-void UnfamilarMode::getModeName()
+QString UnfamilarMode::getModeName()
 {
-
+    return "陌生模式";
 }
 
 int UnfamilarMode::getNextId()

@@ -29,6 +29,8 @@
 #include "modeparent.h"
 #include "studymode.h"
 #include "checkmode.h"
+#include "trainmode.h"
+#include "unfamilarmode.h"
 
 #define CARD_PATH "./image/"
 #define CARD_NAME_PATH "./raw/names.txt"
@@ -80,6 +82,7 @@ public:
 
     // mode
     ModeParent *currModeContext;
+    QList<ModeParent*> modeList;
 
     int getRandCardNum(int size);
     QString getPicPathByid(int id);
@@ -87,14 +90,14 @@ public:
     int getNumSize();
     void updateByID(int id);
     void init();
-    void initSrand();
     void initMenuBar();
     void initBackground();
     void initUI();
     void initScope();
     void initMode();
+    void initModeList();
+    void bindModeToMenu(QMenu* modeMenu);
     void readAllCardInfoFromFile(QString path);
-    void showImageAndLabel(QString path, QString text, bool ispic);
     void startProg();
     void updateStateUI();
     int getTrueSize();
@@ -117,7 +120,6 @@ public:
     void contextMenuEvent(QContextMenuEvent *event);
 
 public slots:
-    void slotChooseStydyMode(bool triggle);
     void slotChooseCheckMode(bool triggle);
     void slotChooseTrainMode(bool triggle);
     void slotunfamiliarMode(bool triggle);
@@ -125,6 +127,8 @@ public slots:
     void slotAddToUnfamiliar(int id);
     void slotCopyText();
     void slotAddToUnfamiliarAction();
+
+    void slotModeClick();
 
 signals:
     void signalAddToUnfamiliar(int id);

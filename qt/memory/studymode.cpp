@@ -18,14 +18,14 @@ void StudyMode::handlerNext()
     }else{
         if(isEnded()){
             rightWidget->stopTimerWin();
-            QString msg = "Congratulations, You've finished the study.\nDid you want to continue study?";
+            QString msg = "恭喜, 你已经学习完成了当前内容.\n是否重新开始学习?";
 
             int choose = QMessageBox::information(memoryMain, "Info", msg,
                                                   QMessageBox::Ok, QMessageBox::Cancel);
 
             if(choose == QMessageBox::Ok){
                 rightWidget->startTimeWin();
-                handleRestart();
+                handlerRestart();
             }
 
         }else{
@@ -71,17 +71,23 @@ void StudyMode::handlerChoosen()
 
 void StudyMode::handlerLeft()
 {
-
+    leftWidget->close();
+    rightWidget->close();
 }
 
 void StudyMode::handlerRestart()
 {
+    LearnScopeEntity learnScopeEntity = memoryMain->getLearnScopeEntity();
 
-}
-
-void StudyMode::getModeName()
-{
-
+    backStack.clear();
+    isShowPic = false;
+    if(learnScopeEntity.fromID != -1){
+        currID = learnScopeEntity.fromID;
+    }else{
+        currID = 0;
+    }
+    updateByID(currID);
+    updateStateUI();
 }
 
 int StudyMode::getNextId()
@@ -129,11 +135,6 @@ bool StudyMode::isEnded()
     return currID == getLastId();
 }
 
-void StudyMode::handleRestart()
-{
-
-}
-
 void StudyMode::showImageAndLabel(QString path, QString text, bool ispic)
 {
     leftWidget->showImageAndLabel(path, text, ispic);
@@ -157,6 +158,11 @@ void StudyMode::updateByID(int id)
     currID = id;
 
     showImageAndLabel(currPath, currNumText, isShowPic);
+}
+
+QString StudyMode::getModeName()
+{
+    return "学习模式";
 }
 
 
