@@ -10,11 +10,14 @@ class ShowWin : public QWidget
 public:
     explicit ShowWin(QWidget *parent = nullptr);
 
+    //变量
+    QLabel* imageLabel;
+    QLabel* numLabel;
+
+    //函数
     void initUi();
     void showImageAndLabel(QString path, QString text, bool ispic);
 
-    QLabel* imageLabel;
-    QLabel* numLabel;
 signals:
 
 public slots:

@@ -9,7 +9,7 @@ LearnScopeDialog::LearnScopeDialog(QWidget *parent) :
     parentWin = (MemoryMain*)(this->parent());
 
     initUI();
-    initDataByMode(parentWin->mode);
+    initDataByMode();
 }
 
 LearnScopeDialog::~LearnScopeDialog()
@@ -27,130 +27,130 @@ void LearnScopeDialog::initUI()
     setFixedSize(size());
     this->setWindowTitle("Study Scope Setting");
 
-    initUIByMode(parentWin->mode);
+    initUIByMode();
 }
 
-void LearnScopeDialog::initDataByMode(StudyModeEnum mode)
+void LearnScopeDialog::initDataByMode()
 {
-    switch (mode) {
-    case studyModezzzzzz:
-        ui->fromEdit->setText(parentWin->currNumText);
-        break;
-    case checkModezzzzzzzzzzzz:
-        ui->fromEdit->setText("00");
-        break;
-    case trainModezzzzzzzzzzzz:
-        break;
-    case unfamiliarModezzzzzzzzzz:
-        assert(0);
-        break;
-    default:
-        assert(0);
-    }
+//    switch (mode) {
+//    case studyModezzzzzz:
+//        ui->fromEdit->setText(parentWin->currNumText);
+//        break;
+//    case checkModezzzzzzzzzzzz:
+//        ui->fromEdit->setText("00");
+//        break;
+//    case trainModezzzzzzzzzzzz:
+//        break;
+//    case unfamiliarModezzzzzzzzzz:
+//        assert(0);
+//        break;
+//    default:
+//        assert(0);
+//    }
 
-    ui->countEdit->setText(QString::number(DEFOULT_LEARN_NUM));
-    ui->totalEdit->setText(QString::number(parentWin->getTrueSize()));
+//    ui->countEdit->setText(QString::number(DEFOULT_LEARN_NUM));
+//    ui->totalEdit->setText(QString::number(parentWin->getTrueSize()));
 }
 
-void LearnScopeDialog::initUIByMode(StudyModeEnum mode)
+void LearnScopeDialog::initUIByMode()
 {
-    switch (mode) {
-    case studyModezzzzzz:
-        ui->countEdit->setEnabled(false);
-        ui->fromEdit->setFocus();
-        ui->fromEdit->selectedText();
-        break;
-    case checkModezzzzzzzzzzzz:
-        //choose scope to check
-        ui->countEdit->setEnabled(true);
-        ui->endEdit->setFocus();
-        break;
-    case trainModezzzzzzzzzzzz:
-        ui->countEdit->setEnabled(true);
-        ui->fromEdit->setEnabled(false);
-        ui->endEdit->setEnabled(false);
-        ui->countEdit->setFocus();
-        ui->countEdit->selectedText();
-        break;
-    case unfamiliarModezzzzzzzzzz:
-        assert(0);
-        break;
-    default:
-        assert(0);
-    }
-    ui->numberEdit->setEnabled(false);
-    ui->totalEdit->setEnabled(false);
+//    switch (mode) {
+//    case studyModezzzzzz:
+//        ui->countEdit->setEnabled(false);
+//        ui->fromEdit->setFocus();
+//        ui->fromEdit->selectedText();
+//        break;
+//    case checkModezzzzzzzzzzzz:
+//        //choose scope to check
+//        ui->countEdit->setEnabled(true);
+//        ui->endEdit->setFocus();
+//        break;
+//    case trainModezzzzzzzzzzzz:
+//        ui->countEdit->setEnabled(true);
+//        ui->fromEdit->setEnabled(false);
+//        ui->endEdit->setEnabled(false);
+//        ui->countEdit->setFocus();
+//        ui->countEdit->selectedText();
+//        break;
+//    case unfamiliarModezzzzzzzzzz:
+//        assert(0);
+//        break;
+//    default:
+//        assert(0);
+//    }
+//    ui->numberEdit->setEnabled(false);
+//    ui->totalEdit->setEnabled(false);
 }
 
 void LearnScopeDialog::on_obtun_clicked()
 {
-    StudyModeEnum prentMode = parentWin->mode;
+//    StudyModeEnum prentMode = parentWin->mode;
 
-    switch (prentMode) {
-    case studyModezzzzzz:
-        //TODO
-        break;
-    case checkModezzzzzzzzzzzz:
-        //TODO
-        break;
-    case trainModezzzzzzzzzzzz:{
-        QString totalStr = ui->countEdit->text();
-        if(totalStr == "" || totalStr.toInt() == 0){
-            QMessageBox::information(this, "info", "please input valid value",
-                                     QMessageBox::Ok);
-            return;
-        }
+//    switch (prentMode) {
+//    case studyModezzzzzz:
+//        //TODO
+//        break;
+//    case checkModezzzzzzzzzzzz:
+//        //TODO
+//        break;
+//    case trainModezzzzzzzzzzzz:{
+//        QString totalStr = ui->countEdit->text();
+//        if(totalStr == "" || totalStr.toInt() == 0){
+//            QMessageBox::information(this, "info", "please input valid value",
+//                                     QMessageBox::Ok);
+//            return;
+//        }
 
-        break;
-    }
-    case unfamiliarModezzzzzzzzzz:
-        assert(0);
-        break;
-    default:
-        assert(0);
-    }
+//        break;
+//    }
+//    case unfamiliarModezzzzzzzzzz:
+//        assert(0);
+//        break;
+//    default:
+//        assert(0);
+//    }
 
-    accept();
+//    accept();
 
 }
 
 void LearnScopeDialog::on_fromEdit_textChanged(const QString &data)
 {
-    int pos = parentWin->getNumByText(data);
-    startID = pos;
-    if(pos != -1){
-        if(parentWin->mode == studyModezzzzzz){
-            if(startID > endID){
-                ui->countEdit->setText("");
-            }else{
-                ui->countEdit->setText(QString::number(endID - startID + 1));
-            }
-        }
-        ui->numberEdit->setText(QString::number(pos));
-    }else{
-        if(parentWin->mode == studyModezzzzzz){
-            ui->numberEdit->setText("");
-        }
-    }
+//    int pos = parentWin->getNumByText(data);
+//    startID = pos;
+//    if(pos != -1){
+//        if(parentWin->mode == studyModezzzzzz){
+//            if(startID > endID){
+//                ui->countEdit->setText("");
+//            }else{
+//                ui->countEdit->setText(QString::number(endID - startID + 1));
+//            }
+//        }
+//        ui->numberEdit->setText(QString::number(pos));
+//    }else{
+//        if(parentWin->mode == studyModezzzzzz){
+//            ui->numberEdit->setText("");
+//        }
+//    }
 }
 
 void LearnScopeDialog::on_endEdit_textChanged(const QString &data)
 {
-    int pos = parentWin->getNumByText(data);
-    endID = pos;
-    if(pos != -1){
-        if(parentWin->mode == studyModezzzzzz){
-            if(startID > endID){
-                ui->countEdit->setText("");
-            }else{
-                ui->countEdit->setText(QString::number(endID - startID + 1));
-            }
-        }
-    }else{
-        if(parentWin->mode == studyModezzzzzz){
-            ui->countEdit->setText("");
-        }
-    }
+//    int pos = parentWin->getNumByText(data);
+//    endID = pos;
+//    if(pos != -1){
+//        if(parentWin->mode == studyModezzzzzz){
+//            if(startID > endID){
+//                ui->countEdit->setText("");
+//            }else{
+//                ui->countEdit->setText(QString::number(endID - startID + 1));
+//            }
+//        }
+//    }else{
+//        if(parentWin->mode == studyModezzzzzz){
+//            ui->countEdit->setText("");
+//        }
+//    }
 }
 
 QString LearnScopeDialog::getFromText()

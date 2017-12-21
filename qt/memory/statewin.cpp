@@ -34,10 +34,19 @@ void StateWin::initUI()
 
 void StateWin::updateStateUI(int showID, int numSize)
 {
-    QString processText = QString::number(showID + 1) + "/" + QString::number(numSize);
+    if(numSize == -1){
+        QString processText = QString::number(showID) + "/" + "..";
 
-    processTextLabel->setText(processText);
-    stateProcessBar->setValue(100 * (showID + 1) / numSize);
+        processTextLabel->setText(processText);
+        stateProcessBar->setValue(0);
+    }else{
+        QString processText = QString::number(showID) + "/" + QString::number(numSize);
+
+        processTextLabel->setText(processText);
+        stateProcessBar->setValue(100 * (showID) / numSize);
+    }
+
+
 }
 
 void StateWin::resetTimerWin()

@@ -11,15 +11,16 @@ class StateWin : public QWidget
 public:
     explicit StateWin(QWidget *parent = nullptr);
 
+    //变量
+    TimerLabel *timeLabel;
+
+    //函数
     void initUI();
     QVBoxLayout *stateLayout;
     QLabel* processTextLabel;
     QProgressBar *stateProcessBar;
     void updateStateUI(int showID, int numSize);
     void resetTimerWin();
-
-    TimerLabel *timeLabel;
-
     int getTimerWinSec();
     void stopTimerWin();
     void startTimeWin();

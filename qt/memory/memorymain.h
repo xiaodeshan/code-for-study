@@ -52,43 +52,22 @@ public:
     explicit MemoryMain(QWidget *parent = 0);
     ~MemoryMain();
 
-    // variables
-
-    // num is a id on behalf of the filename. for example the "01" of the "01.png"
+    // 变量
+    // num 为 "01.png" 中的 "01"
     QStringList* cardNums;
     QStringList* cardNames;
-    QList<int>*  unfamiliarList;
-    int unfamiliarId;
-
-    bool isShowPic;
-    QString currPath;
-    QString currNumText;
-    int currID;
-    QStack<int> backStack;
     QMenuBar *menuBar;
-    StudyModeEnum mode;
-    // is it the first running
-    bool justStart;
-
     //study scope
-    int learnNum;
-    int fromID;
-    int toID;
     LearnScopeEntity *learnScopeEntity;
-
     // ui
     QHBoxLayout *widgetLayout;
     LearnScopeDialog* dialog;
-
     // mode
     ModeParent *currModeContext;
     QList<ModeParent*> modeList;
 
-    int getRandCardNum(int size);
+    //函数
     QString getPicPathByid(int id);
-    int getNextID();
-    int getNumSize();
-    void updateByID(int id);
     void init();
     void initMenuBar();
     void initBackground();
@@ -98,36 +77,18 @@ public:
     void initModeList();
     void bindModeToMenu(QMenu* modeMenu);
     void readAllCardInfoFromFile(QString path);
-    void startProg();
-    void updateStateUI();
     int getTrueSize();
-    int getLast();
     void updateLayout(QWidget *mainPageWidget, QWidget *rightStatusWidget);
-    StateWin* getStateWin();
-    ShowWin* getShowWin();
-    TrainWin *getTrainWin();
-    int getNumByText(QString data);
-    void resetLearn();
-    int getRandomByFromTo(int from, int to);
     void copyText(QString);
-    bool isEnded();
-    void handleKeyNext();
-    void handleKeyLast();
     LearnScopeEntity getLearnScopeEntity();
 
-
+    //虚函数
     void keyPressEvent(QKeyEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
 
 public slots:
-    void slotChooseCheckMode(bool triggle);
-    void slotChooseTrainMode(bool triggle);
-    void slotunfamiliarMode(bool triggle);
-    void slotChooseScope();
-    void slotAddToUnfamiliar(int id);
     void slotCopyText();
     void slotAddToUnfamiliarAction();
-
     void slotModeClick();
 
 signals:

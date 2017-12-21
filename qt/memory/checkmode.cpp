@@ -12,23 +12,54 @@ CheckMode::CheckMode(MemoryMain *m): ModeParent(m)
 
 void CheckMode::handlerNext()
 {
+    if(!isShowPic){
+        isShowPic = true;
+        showImageAndLabel(currPath, currNumText + " " + memoryMain->cardNames->at(currID), isShowPic);
+    }else{
+        if(isEnded()){
+            rightWidget->stopTimerWin();
+            QString msg = "恭喜, 你已经学习完成了当前内容.\n是否重新开始学习?";
 
+            int choose = QMessageBox::information(memoryMain, "Info", msg,
+                                                  QMessageBox::Ok, QMessageBox::Cancel);
+
+            if(choose == QMessageBox::Ok){
+                rightWidget->startTimeWin();
+                handlerRestart();
+            }
+
+        }else{
+            isShowPic = false;
+            backStack.push(currID);
+            updateByID(getNextId());
+            updateStateUI();
+        }
+    }
 }
 
 void CheckMode::handlerLast()
 {
-
+    if(!isShowPic){
+        if(!backStack.isEmpty()){
+            int last = backStack.pop();
+            updateByID(last);
+            updateStateUI();
+        }else{
+            QMessageBox::information(memoryMain, "提示", "已经是第一个了",
+                                     QMessageBox::Ok);
+        }
+    }else{
+        isShowPic = false;
+        updateByID(currID);
+    }
 }
 
 void CheckMode::handlerChoosen()
 {
-    //leftWidget->close();
-    //leftWidget = new ShowWin(memoryMain);
-    //leftWidget->show();
-    //rightWidget->show();
     isShowPic = false;
 
     currID = getNextId();
+    updateByID(currID);
 
     memoryMain->updateLayout(leftWidget, rightWidget);
     updateStateUI();
@@ -58,10 +89,10 @@ QString CheckMode::getModeName()
 int CheckMode::getNextId()
 {
     LearnScopeEntity learnScopeEntity = memoryMain->getLearnScopeEntity();
-    if(learnScopeEntity.fromID != -1)
+    if(learnScopeEntity.valid())
         return getRandomByFromTo(learnScopeEntity.fromID, learnScopeEntity.toID);
     else
-        return getRandomByFromTo(0, getNumSize() - 1);
+        return getRandomByFromTo(0, memoryMain->getTrueSize() - 1);
 }
 
 int CheckMode::getLastId()
@@ -71,7 +102,10 @@ int CheckMode::getLastId()
 
 int CheckMode::getNumSize()
 {
-    return memoryMain->getTrueSize();
+    LearnScopeEntity learnScopeEntity = memoryMain->getLearnScopeEntity();
+    if(learnScopeEntity.valid())
+        return learnScopeEntity.learnNum;
+    return -1;
 }
 
 bool CheckMode::isEnded()
@@ -84,6 +118,11 @@ bool CheckMode::isEnded()
     }
 
     return false;
+}
+
+int CheckMode::getCurrId()
+{
+    return currID;
 }
 
 int CheckMode::getRandomByFromTo(int from, int to)
@@ -102,11 +141,7 @@ void CheckMode::updateByID(int id)
 
 void CheckMode::updateStateUI()
 {
-    int showID = currID;
-    LearnScopeEntity learnScopeEntity = memoryMain->getLearnScopeEntity();
-
-    if(learnScopeEntity.fromID != -1)
-        showID = currID - learnScopeEntity.fromID;
+    int showID = backStack.size() + 1;
     rightWidget->updateStateUI(showID, getNumSize());
 }
 

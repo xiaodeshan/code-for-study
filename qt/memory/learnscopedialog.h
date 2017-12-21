@@ -22,22 +22,21 @@ public:
     explicit LearnScopeDialog(QWidget *parent = 0);
     ~LearnScopeDialog();
 
-    // parent win
+    //变量
+    // 父窗口
     MemoryMain *parentWin;
+    int startID;
+    int endID;
 
+    //函数
     void initUI();
-    void initDataByMode(StudyModeEnum mode);
-    void initUIByMode(StudyModeEnum mode);
-
+    void initDataByMode();
+    void initUIByMode();
     QString getFromText();
-
     // from to total
     int getStartID();
     int getToID();
     int getTotal();
-
-    int startID;
-    int endID;
 
 private slots:
     void on_cancelbtn_clicked();

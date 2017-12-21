@@ -9,13 +9,14 @@ class ModeParent;
 class LearnScopeEntity
 {
 public:
+    //成员
     int learnNum;
     int fromID;
     int toID;
 
-    LearnScopeEntity(int learnNum = -1, int fromID = -1, int toID = -1);
+    //函数
     bool valid();
-
+    LearnScopeEntity(int learnNum = -1, int fromID = -1, int toID = -1);
     static LearnScopeEntity* crateEmptyLearnScopeEntity();
 };
 

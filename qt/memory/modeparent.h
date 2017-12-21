@@ -8,13 +8,13 @@ class MemoryMain;
 class LearnScopeEntity;
 
 
-class ModeParent
+class ModeParent : public QObject
 {
+    Q_OBJECT
+
 public:
 
     explicit ModeParent(MemoryMain* m = nullptr);
-
-    //LearnScopeEntity getLearnScopeEntity();
 
     virtual void handlerNext() = 0;
     virtual void handlerLast() = 0;
@@ -26,6 +26,7 @@ public:
     virtual int getLastId() = 0;
     virtual int getNumSize() = 0;
     virtual bool isEnded() = 0;
+    virtual int getCurrId() = 0;
 
 signals:
 

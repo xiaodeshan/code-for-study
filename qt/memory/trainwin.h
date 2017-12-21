@@ -12,17 +12,17 @@ class TrainWin : public QWidget
 public:
     explicit TrainWin(QWidget *parent = nullptr);
 
+    //变量
     QLabel *phoneLabel;
+    QString currPhone;
+    QStack<QString> backStack;
 
+    //函数
     void init();
     void initUI();
     QString randomPhone();
     void nextShow();
     bool lastShow();
-
-    QString currPhone;
-    QStack<QString> backStack;
-
 
 signals:
 

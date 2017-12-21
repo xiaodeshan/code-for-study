@@ -4,6 +4,7 @@
 #include "modeparent.h"
 #include "memorymain.h"
 #include "learnscopeentity.h"
+#include "trainwin.h"
 
 class MemoryMain;
 class ModeParent;
@@ -14,6 +15,14 @@ class TrainMode : public ModeParent
 public:
     explicit TrainMode(MemoryMain* m = nullptr);
 
+    //变量
+    TrainWin *trainWin;
+    StateWin *stateWin;
+
+    //函数
+    void updateStateUI();
+
+    //虚函数
     void handlerNext();
     void handlerLast();
     void handlerChoosen();
@@ -24,6 +33,8 @@ public:
     int getLastId();
     int getNumSize();
     bool isEnded();
+    int getCurrId();
+
 };
 
 #endif // TRAINMODE_H

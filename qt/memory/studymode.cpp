@@ -135,6 +135,11 @@ bool StudyMode::isEnded()
     return currID == getLastId();
 }
 
+int StudyMode::getCurrId()
+{
+    return currID;
+}
+
 void StudyMode::showImageAndLabel(QString path, QString text, bool ispic)
 {
     leftWidget->showImageAndLabel(path, text, ispic);
@@ -147,7 +152,7 @@ void StudyMode::updateStateUI()
 
     if(learnScopeEntity.fromID != -1)
         showID = currID - learnScopeEntity.fromID;
-    rightWidget->updateStateUI(showID, getNumSize());
+    rightWidget->updateStateUI(showID + 1, getNumSize());
 }
 
 

@@ -15,6 +15,24 @@ class CheckMode : public ModeParent
 public:
     explicit CheckMode(MemoryMain* m = nullptr);
 
+    //变量
+    QStack<int> backStack;
+    bool isShowPic;
+    int currID;
+    QString currPath;
+    QString currNumText;
+    // ui
+    ShowWin *leftWidget;
+    StateWin *rightWidget;
+
+    // 函数
+    int getRandomByFromTo(int from, int to);
+    void updateByID(int id);
+    void updateStateUI();
+    void showImageAndLabel(QString path, QString text, bool ispic);
+    void initSrand();
+
+    //虚函数
     void handlerNext();
     void handlerLast();
     void handlerChoosen();
@@ -25,23 +43,7 @@ public:
     int getLastId();
     int getNumSize();
     bool isEnded();
-
-
-    int getRandomByFromTo(int from, int to);
-    void updateByID(int id);
-    void updateStateUI();
-    void showImageAndLabel(QString path, QString text, bool ispic);
-    void initSrand();
-
-    QStack<int> backStack;
-    bool isShowPic;
-    int currID;
-    QString currPath;
-    QString currNumText;
-
-    // ui
-    ShowWin *leftWidget;
-    StateWin *rightWidget;
+    int getCurrId();
 };
 
 #endif // CHECKMODE_H

@@ -12,12 +12,13 @@ class TimerLabel : public QLabel
 public:
     explicit TimerLabel(QWidget *parent = nullptr);
 
+    //变量
     int sec;
 
+    //函数
     void start();
     void stop();
     void reset();
-
     QString getSecText();
     QTimer* timer;
 
