@@ -669,3 +669,4 @@ qt/build-memory-qt5_9_1-Release/Makefile
 qt/build-memory-qt5_9_1-Release/.qmake.stash
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/debug/moc_unfamilarmode.cpp
 qt/build-memory-Desktop_Qt_5_9_3_MinGW_32bit-Debug/debug/moc_modeparent.cpp
+qt/build-memory-qt5_9_1-Release/memory.exe
