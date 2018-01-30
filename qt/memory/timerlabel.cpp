@@ -28,6 +28,7 @@ void TimerLabel::reset()
 QString TimerLabel::getSecText()
 {
     QString result = "";
+    // 小于1小时
     if(sec < 60 * 60){
         int min = sec / 60;
         int trueSec = sec - min * 60;
@@ -49,8 +50,8 @@ QString TimerLabel::getSecText()
         return result;
     }else if(sec < 60 * 60 * 24){
         int hour = sec / 3600;
-        int min = (sec - hour * 60) / 60;
-        int trueSec = sec - min * 60;
+        int min = (sec - hour * 3600) / 60;
+        int trueSec = sec - hour * 3600 - min * 60;
 
         if(hour < 10){
             result += "0" + QString::number(hour);
@@ -74,9 +75,9 @@ QString TimerLabel::getSecText()
 
     }else{
         int day = sec / 3600 / 24;
-        int hour = (sec - day * 3600 * 24)/ 3600;
-        int min = (sec - hour * 60) / 60;
-        int trueSec = sec - min * 60;
+        int hour = (sec - day * 3600 * 24) / 3600;
+        int min = (sec - day * 3600 * 24 - hour * 3600) / 60;
+        int trueSec = sec - day * 3600 * 24 - hour * 3600 - min * 60;
 
         result += QString::number(hour) + "天";
 
